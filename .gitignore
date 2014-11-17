@@ -1,0 +1,9 @@
+*.js.map
+*.DS_Store
+.temp
+.cache
+node_modules
+bower_components
+dist/client/*.js
+dist/client/libs/*
+
