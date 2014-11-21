@@ -1,9 +1,23 @@
-goog.provide('rsz.App');
 
 /**
- * @constructor
+ * @class App
+ * @struct
  */
-rsz.App = function(){
-  console.log('init responsize app');
-};
+class App extends Object{
+  /**
+   * @constructor
+   */
+  constructor(){
+    console.log('App');
+  }
+  /**
+   * load the file
+   * @param {string} url
+   */
+  import(url){
+    console.log('import', url);
+  }
+}
 
+
+export default App;
