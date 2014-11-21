@@ -1,4 +1,7 @@
 goog.require('rsz.App');
 
-var app = new App();
-app.importWebsite('http://www.google.com');
+window.addEventListener('load', (e) => {
+  var appElement = document.getElementById('app');
+  var app = new App(appElement);
+  app.importWebsite('http://www.google.com');
+});

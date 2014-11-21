@@ -1,14 +1,21 @@
 goog.provide('rsz.App');
 
+goog.require('rsz.Stage')
+
 /**
  * @class
  */
 class App {
   /**
    * @constructor
+   * @param {Element} element
    */
-  constructor(){
-    console.log('App');
+  constructor(element){
+    /**
+     * Stage component
+     * @type {Stage}
+     */
+    this.stage = new Stage(element.querySelector('#stage'));
   }
   /**
    * load the file
