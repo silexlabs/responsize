@@ -4,12 +4,23 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-bower');
+  require('load-grunt-tasks')(grunt);
 
   grunt.registerTask('default', ['build']);
-  grunt.registerTask('build', ['bower', 'closureCompiler']);
+  grunt.registerTask('build', ['bower', 'sass', 'closureCompiler']);
   grunt.registerTask('serve', ['connect', 'watch']);
 
   grunt.initConfig({
+    sass: {
+      options: {
+        sourceMap: true
+      },
+      dist: {
+        files: {
+          'dist/client/responsize.css': 'src/**/*.scss'
+        }
+      }
+    },
     closureCompiler:{
       options: {
         compilerFile: 'bower_components/closure-compiler/lib/vendor/compiler.jar',
@@ -43,7 +54,7 @@ module.exports = function(grunt) {
     },
     watch: {
       scripts: {
-        files: ['src/**/*.js', 'Gruntfile.js', 'dist/client/index.html'],
+        files: ['src/**/*.js', 'src/**/*.scss', 'Gruntfile.js', 'dist/client/index.html'],
         tasks: ['build'],
         options: {
           spawn: false,

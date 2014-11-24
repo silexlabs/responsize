@@ -1,0 +1,31 @@
+$deviceSize: 64px;
+
+
+.toolbar {
+  li {
+      list-style: none;
+  }
+  .device {
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: 50%;
+    width: $deviceSize;
+    height: $deviceSize;
+    float: left;
+    margin: 10px;
+    cursor: pointer;
+  }
+  .device.selected {
+    border: 1px white solid;
+    background-size: 80%;
+  }
+  .mobile {
+    background-image: url('/assets/iphone-blanc.png');
+  }
+  .tablet {
+    background-image: url('/assets/ipad-blanc.png');
+  }
+  .desktop {
+    background-image: url('/assets/imac-blanc.png');
+  }
+}

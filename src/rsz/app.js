@@ -1,6 +1,7 @@
 goog.provide('rsz.App');
 
-goog.require('rsz.Stage')
+goog.require('rsz.Stage');
+goog.require('rsz.Toolbar');
 
 /**
  * @class
@@ -12,7 +13,10 @@ class App {
    */
   constructor(element){
     /**
-     * Stage component
+     * @type {Toolbar}
+     */
+    this.toolbar= new Toolbar(element.querySelector('#toolbar'));
+    /**
      * @type {Stage}
      */
     this.stage = new Stage(element.querySelector('#stage'));
@@ -23,6 +27,7 @@ class App {
    */
   importWebsite(url){
     console.log('import', url);
+    this.stage.setUrl(url);
   }
 }
 

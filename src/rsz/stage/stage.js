@@ -11,9 +11,19 @@ class Stage {
    */
   constructor(element) {
     /**
+     * the container for this component
+     */
+    this.element = element;
+    /**
      * @type {HTMLIFrameElement}
      */
     this.iframe = /** @type {HTMLIFrameElement} */ (document.createElement('iframe'));
     element.appendChild(this.iframe);
+  }
+  /**
+   * @param {string} url
+   */
+  setUrl(url) {
+    this.iframe.src = url;
   }
 }
