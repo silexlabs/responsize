@@ -1,13 +1,22 @@
 
 module.exports = function(grunt) {
-  grunt.loadNpmTasks('grunt-closure-tools');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-bower');
+
+  // js
+  grunt.loadNpmTasks('grunt-closure-tools');
+  
+  // css
   require('load-grunt-tasks')(grunt);
 
+  // html
+  grunt.loadNpmTasks('grunt-contrib-jade');
+
+ 
+
   grunt.registerTask('default', ['build']);
-  grunt.registerTask('build', ['bower', 'sass', 'closureCompiler']);
+  grunt.registerTask('build', ['bower', 'jade', 'sass', 'closureCompiler']);
   grunt.registerTask('serve', ['connect', 'watch']);
 
   grunt.initConfig({
@@ -53,13 +62,28 @@ module.exports = function(grunt) {
       }
     },
     watch: {
-      scripts: {
-        files: ['src/**/*.js', 'src/**/*.scss', 'Gruntfile.js', 'dist/client/index.html'],
-        tasks: ['build'],
+      options: {
+        livereload: true
+      },
+      js: {
+        files: ['src/**/*.js', 'Gruntfile.js'],
+        tasks: ['closureCompiler']
+      },
+      html: {
+        files: ['src/**/*.jade', 'Gruntfile.js'],
+        tasks: ['jade']
+      },
+      sass: {
+        files: ['src/**/*.scss', 'Gruntfile.js'],
+        tasks: ['sass']
+      }
+    },
+    jade: {
+      compile: {
         options: {
-          spawn: false,
-          debounceDelay: 250,
-          livereload: true
+        },
+        files: {
+          'dist/client/index.html': 'src/index.jade'
         }
       }
     },

@@ -1,26 +1,41 @@
-$deviceSize: 64px;
-
-
 .toolbar {
-  li {
-      list-style: none;
+  background-color: $color1;
+  height: $toolbarHeight - 20;
+  width: 100%;
+  position: fixed;
+  padding: 10px;
+
+  ul {
+    padding: 0;
+    margin: 0;
+    border-right-color: $color0;
+    border-right-style: inset;
+    border-right-width: 1px;
+    display: inline-block;
   }
-  .device {
+  li.device {
+    list-style: none;
     background-repeat: no-repeat;
     background-size: contain;
     background-position: 50%;
-    width: $deviceSize;
-    height: $deviceSize;
-    float: left;
-    margin: 10px;
+    width: 40px;
+    height: 40px;
+    margin-left: 20px;
+    margin-right: 20px;
     cursor: pointer;
+    opacity: .5;
+    display: inline-block;
   }
   .device.selected {
-    border: 1px white solid;
-    background-size: 80%;
+    filter: drop-shadow(0 0 17px rgba(255, 255, 255, 0.8));
+    -webkit-filter: drop-shadow(0 0 17px rgba(255, 255, 255, 0.8));
+    opacity: 1;
   }
   .mobile {
     background-image: url('/assets/iphone-blanc.png');
+  }
+  .mobile-h {
+    background-image: url('/assets/iphone-blanc-h.png');
   }
   .tablet {
     background-image: url('/assets/ipad-blanc.png');

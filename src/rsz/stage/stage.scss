@@ -1,15 +1,10 @@
-$top: 100px;
-$bottom: 10px;
-$left: 100px;
-$right: 10px;
-
 .stage {
-  top: $top;
-  left: $left;
-  right: $right;
-  bottom: $bottom;
+  top: $stageTop;
+  left: $stageLeft;
+  right: $stageRight;
+  bottom: $stageBottom;
   position: absolute;
-  background-color: $color2;
+  background-color: $color0;
   iframe {
     width: 100%;
     height: 100%;

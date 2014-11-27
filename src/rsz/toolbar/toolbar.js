@@ -5,8 +5,9 @@ goog.provide('rsz.Toolbar');
  */
 var Device = {
   mobile: 0,
-  tablet: 1,
-  desktop: 2
+  mobileH: 1,
+  tablet: 2,
+  desktop: 3
 };
 
 
@@ -15,6 +16,7 @@ var Device = {
  */
 var DeviceData = [
   {name: 'mobile', width: 480, height: 320},
+  {name: 'mobile-h', width: 320, height: 480},
   {name: 'tablet', width: 768, height: 1024},
   {name: 'desktop', width: 1280, height: 800},
 ]
@@ -38,15 +40,7 @@ class Toolbar {
      * @type {number}
      */
     this.selectedDevice = Device.desktop;
-    // Init UI
-    this.element.innerHTML = '\
-      <ul>\
-        <li class="device mobile" />\
-        <li class="device tablet" />\
-        <li class="device desktop" />\
-      </ul>\
-    ';
-    this.setDevice(Device.mobile);
+    this.setDevice(Device.desktop);
     this.element.addEventListener('click', (e) => this.onClick(e));
   }
 
@@ -59,6 +53,9 @@ class Toolbar {
     console.log('click', e, element, this.setDevice);
     if(element.classList.contains('mobile')) {
       this.setDevice(Device.mobile);
+    }
+    if(element.classList.contains('mobile-h')) {
+      this.setDevice(Device.mobileH);
     }
     if(element.classList.contains('tablet')) {
       this.setDevice(Device.tablet);

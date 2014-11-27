@@ -17,8 +17,7 @@ class Stage {
     /**
      * @type {HTMLIFrameElement}
      */
-    this.iframe = /** @type {HTMLIFrameElement} */ (document.createElement('iframe'));
-    element.appendChild(this.iframe);
+    this.iframe = /** @type {HTMLIFrameElement} */ (document.getElementById('iframe'));
   }
   /**
    * @param {string} url

@@ -1,7 +1,19 @@
-$color0: #000000;
-$color1: #29313C;
+// colors
+$color0: grey;
+$color1: #313131;
 $color2: #FFFFFF;
+
+// toolbar postion
+$toolbarHeight: 60px;
+
+// stage position
+$stageTop: $toolbarHeight + 10;
+$stageBottom: 10px;
+$stageLeft: 10px;
+$stageRight: 10px;
+
 
 body {
   background-color: $color0;
+  margin: 0;
 }
