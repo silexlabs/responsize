@@ -15,8 +15,8 @@ var Device = {
  * @type {Array.<{width: number, height: number}>}
  */
 var DeviceData = [
-  {name: 'mobile', width: 480, height: 320},
-  {name: 'mobile-h', width: 320, height: 480},
+  {name: 'mobile', width: 320, height: 480},
+  {name: 'mobile-h', width: 476, height: 320},
   {name: 'tablet', width: 768, height: 1024},
   {name: 'desktop', width: 1280, height: 800},
 ]
@@ -36,11 +36,22 @@ class Toolbar {
      * the container for this component
      */
     this.element = element;
+    
+    
     /**
      * @type {number}
      */
     this.selectedDevice = Device.desktop;
-    this.setDevice(Device.desktop);
+    
+    
+    /**
+     * callback
+     * @type {function(number, number)|null}
+     */
+    this.onSize = null;
+
+
+    // handle click
     this.element.addEventListener('click', (e) => this.onClick(e));
   }
 
@@ -50,7 +61,6 @@ class Toolbar {
    */
   onClick(e) {
     var element = e.target;
-    console.log('click', e, element, this.setDevice);
     if(element.classList.contains('mobile')) {
       this.setDevice(Device.mobile);
     }
@@ -70,7 +80,6 @@ class Toolbar {
    * @param {number} device
    */
   setDevice(device) {
-    console.log('setDevice', device, DeviceData[device].name);
     this.selectedDevice = device;
     // remove old selection
     let oldSelection = this.element.querySelectorAll('.selected');
@@ -80,5 +89,9 @@ class Toolbar {
     }
     // apply new selection
     this.element.querySelector('.' + DeviceData[device].name).classList.add('selected');
+    // notify the controller
+    if (this.onSize) {
+      this.onSize(DeviceData[device].width, DeviceData[device].height);
+    }
   }
 }
