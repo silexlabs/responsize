@@ -3,5 +3,16 @@ goog.require('rsz.App');
 window.addEventListener('load', (e) => {
   var appElement = document.getElementById('app');
   var app = new App(appElement);
-  app.importWebsite('http://demo.334.proxy.ebztesting.io:80/sao-paulo/');
+  var query = getQueryParams(document.location.search);
+  var url = query.url || 'http://community.silexlabs.org/test/silex-mobile/';
+  app.importWebsite(url);
 });
+
+function getQueryParams(qs) {
+  qs = qs.split("+").join(" ");
+  var params = {}, tokens, re = /[?&]?([^=]+)=([^&]*)/g;
+  while (tokens = re.exec(qs)) {
+    params[decodeURIComponent(tokens[1])] = decodeURIComponent(tokens[2]);
+  }
+  return params;
+}
