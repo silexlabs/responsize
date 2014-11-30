@@ -14,28 +14,30 @@ class Stage {
      * the container for this component
      */
     this.element = element;
-    
-    
+
+
     /**
      * @type {HTMLIFrameElement}
      */
     this.iframe = /** @type {HTMLIFrameElement} */ (document.getElementById('iframe'));
 
-    
+
     /**
-     * @type {number} 
+     * @type {number}
      */
     this.width = 1;
 
-  
+
     /**
-     * @type {number} 
+     * @type {number}
      */
     this.height= 1;
 
     // init
     window.addEventListener('resize', this.redraw.bind(this));
   }
+
+
   /**
    * change the rendering size of the website
    * @param {number} w
@@ -81,10 +83,17 @@ class Stage {
     this.iframe.style.left = offset.x + 'px';
     this.iframe.style.top = offset.y + 'px';
   }
+
+
   /**
    * @param {string} url
+   * @return {Promise}
    */
   setUrl(url) {
-    this.iframe.src = url;
+    let promise = new Promise((resolve, reject) => {
+      this.iframe.onload = () => resolve(this.iframe.contentDocument);
+      this.iframe.src = url;
+    });
+    return promise;
   }
 }

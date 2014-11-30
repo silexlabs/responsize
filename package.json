@@ -1,7 +1,6 @@
 {
   "dependencies": {},
   "devDependencies": {
-    "es6-promise": "~2.0.0",
     "grunt": "~0.4.5",
     "grunt-bower": "~0.16.0",
     "grunt-cli": "~0.1.13",

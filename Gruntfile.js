@@ -13,8 +13,7 @@ module.exports = function(grunt) {
   // html
   grunt.loadNpmTasks('grunt-contrib-jade');
 
- 
-
+  // tasks
   grunt.registerTask('default', ['build']);
   grunt.registerTask('build', ['bower', 'jade', 'sass', 'closureCompiler']);
   grunt.registerTask('serve', ['connect', 'watch']);
