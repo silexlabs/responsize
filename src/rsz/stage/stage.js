@@ -68,7 +68,7 @@ class Stage {
       x: container.w / this.width,
       y: container.h / this.height
     };
-    let finalScale = Math.min(scale.x, scale.y);
+    let finalScale = Math.min(1, scale.x, scale.y);
     // apply the transform
     let str = 'scale(' + finalScale + ')';
     this.iframe.style.transform = str;
