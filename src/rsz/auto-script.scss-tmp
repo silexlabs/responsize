@@ -1,0 +1,41 @@
+    .bg{
+        opacity: 1 !important;
+    }
+
+/*
+@media only screen and (max-width:400px) {
+    .element-5, body, .element-6, .editable-style{
+        position: relative;
+        max-width: 100%;
+        top: initial;
+        left: initial;
+        width: initial;
+        height: initial;
+    }
+    .element-5, body, .element-6{
+        width: 100%;
+    }
+}
+*/
+
+/* */
+body.tmp, .tmp .editable-style{
+    position: relative;
+    max-width: 100%;
+    top: auto;
+    left: auto;
+    height: auto;
+    top: initial;
+    left: initial;
+    height: initial;
+    margin: 0;
+    padding: 0;
+}
+.tmp .editable-style .silex-element-content{
+    height: auto !important;
+    height: initial !important;
+}
+.tmp .element-5, body.tmp, .tmp .element-6{
+    width: 100%;
+}
+/* */
