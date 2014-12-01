@@ -97,10 +97,10 @@ class Wysiwyg {
       .rsz-dragging {\
       }\
       .rsz-selected {\
-        border: 1 solid red !important;\
+        border: 1px solid red !important;\
       }\
       .rsz-select-candidate {\
-        border: 1 solid orange !important;\
+        border: 1px solid orange !important;\
       }\
     ';
     doc.head.appendChild(styles);

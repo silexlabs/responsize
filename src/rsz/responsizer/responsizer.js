@@ -16,7 +16,6 @@ class Responsizer {
    * init the iframe dom with responsize styles
    */
   init(doc){
-    console.log('initDom', doc);
     /*
     // find the body
     let parent = element;
@@ -32,7 +31,6 @@ class Responsizer {
     }
     */
     let style = doc.querySelector('head style#responsize-style');
-    console.log('init', style);
       if(style === null) {
         let style = doc.createElement('style');
         style.innerHTML = '\
@@ -53,7 +51,32 @@ class Responsizer {
         ';
         style.id = 'responsize-style';
         doc.head.appendChild(style);
+
+        let link = doc.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css';
+        doc.head.appendChild(link);
+
+        let script = doc.createElement('script');
+        script.src = 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js';
+        doc.head.appendChild(script);
       }
+  }
+
+
+  /**
+   * counts the number of siblings of type Element
+   * @return {boolean} true if the element has siblings
+   */
+  hasSiblings(element) {
+    let numChildren = 0;
+    for(let idx in element.parentNode.childNodes) {
+      let el = element.parentNode.childNodes[idx];
+      if(el.nodeType === 1) {
+        numChildren++;
+      }
+    }
+    return numChildren > 1;
   }
 
 
@@ -66,6 +89,20 @@ class Responsizer {
     // loop on the selection
     elements.forEach((element) => {
       element.classList.toggle('rsz-responsized');
+    });
+    var totalWidth = window.innerWidth;
+    var colWidth = Math.round(totalWidth / 12);
+    elements.forEach((container) => {
+      var all = container.querySelectorAll('*');
+      for(let idx in all){
+        let element = all[idx];
+        if (this.hasSiblings(element)) {
+          var numCol = Math.max(1, Math.round(element.offsetWidth / colWidth));
+          element.classList.add('col-sm-' + numCol);
+          element.classList.add('col-md-' + Math.max(1, Math.round(numCol/2)));
+          element.classList.add('col-xs-' + Math.min(12, numCol*2));
+        }
+      }
     });
   }
 }
