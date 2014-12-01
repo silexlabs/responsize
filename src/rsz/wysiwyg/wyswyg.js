@@ -55,7 +55,7 @@ class Wysiwyg {
     // add the mouse events
     doc.addEventListener('mouseup', (e) => {
       this.onMouseUp(
-        /** @type {Element} */ (e.target),
+        this.getBestElement(/** @type {Element} */ (e.target)),
         e.clientX,
         e.clientY,
         e.shiftKey
@@ -65,7 +65,7 @@ class Wysiwyg {
     });
     doc.addEventListener('mousedown', (e) => {
       this.onMouseDown(
-        /** @type {Element} */ (e.target),
+        this.getBestElement(/** @type {Element} */ (e.target)),
         e.clientX,
         e.clientY
       )
@@ -74,7 +74,7 @@ class Wysiwyg {
     });
     doc.addEventListener('mousemove', (e) => {
       this.onMouseMove(
-        /** @type {Element} */ (e.target),
+        this.getBestElement(/** @type {Element} */ (e.target)),
         e.clientX,
         e.clientY
       )
@@ -94,8 +94,41 @@ class Wysiwyg {
       .rsz-select-candidate {\
         border: 1 solid orange !important;\
       }\
-    '
+    ';
     doc.head.appendChild(styles);
+  }
+
+
+  /**
+   * get the best element to be selected
+   * i.e. the first parent with siblings
+   * @param {Element} target
+   * @return {Element}
+   */
+  getBestElement(target) {
+    /** @type {Element} */ 
+    let best = target;
+    // loop while we have no siblings
+    while(best && !this.hasSiblings(best)) {
+      best = /** @type {Element} */ (best.parentNode);
+    }
+    return best || target;
+  }
+
+
+  /**
+   * counts the number of siblings of type Element
+   * @return {boolean} true if the element has siblings
+   */
+  hasSiblings(element) {
+    let numChildren = 0;
+    for(let idx in element.parentNode.childNodes) {
+      let el = element.parentNode.childNodes[idx];
+      if(el.nodeType === 1) {
+        numChildren++;
+      }
+    }
+    return numChildren > 1;
   }
 
 
