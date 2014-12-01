@@ -94,14 +94,16 @@ class Responsizer {
     var colWidth = Math.round(totalWidth / 12);
     elements.forEach((container) => {
       var all = container.querySelectorAll('*');
-      for(let idx in all){
+      for(let idx=0; idx<all.length; idx++){
         let element = all[idx];
+        console.log('aaa', element);
         if (this.hasSiblings(element)) {
           var numCol = Math.max(1, Math.round(element.offsetWidth / colWidth));
           element.classList.add('col-sm-' + numCol);
           element.classList.add('col-md-' + Math.max(1, Math.round(numCol/2)));
           element.classList.add('col-xs-' + Math.min(12, numCol*2));
         }
+        console.log('bbb', element);
       }
     });
   }

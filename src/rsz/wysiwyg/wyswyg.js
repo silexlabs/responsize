@@ -24,6 +24,13 @@ class Wysiwyg {
 
 
     /**
+     * selection mode on/off
+     * @type {boolean}
+     */
+    this.selectionMode = false;
+
+
+    /**
      * @type {boolean}
      * true if mouse is down
      */
@@ -58,6 +65,8 @@ class Wysiwyg {
    * @param {HTMLDocument} doc
    */
   init(doc) {
+    // reset selection mode
+    this.selectionMode = false;
     // store for later use
     this.doc= doc;
     // add the mouse events
@@ -94,6 +103,11 @@ class Wysiwyg {
     // insert styles
     let styles = doc.createElement('style');
     styles.innerHTML = '\
+      .rsz-select-mode * {\
+        min-width: 20px !important;\
+        min-height: 20px !important;\
+        opacity: 1 !important;\
+      }\
       .rsz-dragging {\
       }\
       .rsz-selected {\
@@ -106,6 +120,20 @@ class Wysiwyg {
     doc.head.appendChild(styles);
   }
 
+
+  /**
+   * selection mode
+   * @param {boolean} activated
+   */
+  setSelectionMode(activated) {
+    this.selectionMode = activated;
+    if(activated) {
+      this.doc.body.classList.add('rsz-select-mode');
+    }
+    else {
+      this.doc.body.classList.remove('rsz-select-mode');
+    }
+  }
 
   /**
    * get the best element to be selected
@@ -205,18 +233,20 @@ class Wysiwyg {
    * @param {number} y
    */
   onMouseMove(target, x, y) {
-    if (this.isDown) {
-      if (!this.isDragging) {
-        // start dragging
-        this.isDragging = true;
+    if (this.selectionMode) {
+      if (this.isDown) {
+        if (!this.isDragging) {
+          // start dragging
+          this.isDragging = true;
+        }
       }
-    }
-    else {
-      var candidates = this.doc.querySelectorAll('.rsz-select-candidate');
-      for (let idx=0; idx<candidates.length; idx++) {
-        candidates[idx].classList.remove('rsz-select-candidate');
+      else {
+        var candidates = this.doc.querySelectorAll('.rsz-select-candidate');
+        for (let idx=0; idx<candidates.length; idx++) {
+          candidates[idx].classList.remove('rsz-select-candidate');
+        }
+        target.classList.add('rsz-select-candidate');
       }
-      target.classList.add('rsz-select-candidate');
     }
   }
 
@@ -231,24 +261,26 @@ class Wysiwyg {
    */
   onMouseUp(target, x, y, isShift) {
     this.isDown = false;
-    if (this.isDragging) {
-      // drop the element
-      this.isDragging = false;
-    }
-    else {
-      /*
-      // handle multiple selection
-      if (!isShift) {
-        this.getSelected().forEach((element) => this.unSelect(element));
+    if (this.selectionMode) {
+      if (this.isDragging) {
+        // drop the element
+        this.isDragging = false;
       }
-      // select / unselect the element
-      this.toggleSelect(target);
-      */
-      // no multiple selection for now
-      this.getSelected().forEach((element) => {
-        if (element != target) this.unSelect(element)
-      });
-      this.toggleSelect(target);
+      else {
+        /*
+        // handle multiple selection
+        if (!isShift) {
+          this.getSelected().forEach((element) => this.unSelect(element));
+        }
+        // select / unselect the element
+        this.toggleSelect(target);
+        */
+        // no multiple selection for now
+        this.getSelected().forEach((element) => {
+          if (element != target) this.unSelect(element)
+        });
+        this.toggleSelect(target);
+      }
     }
   }
 

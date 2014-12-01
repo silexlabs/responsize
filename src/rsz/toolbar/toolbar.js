@@ -58,6 +58,27 @@ class Toolbar {
     
 
     /**
+     * @type {Element}
+     */
+    this.selectElement = this.element.querySelector('.select');
+    
+
+    /**
+     * @type {Array.<Element>}
+     */
+    this.selection = [];
+    
+
+    /**
+     * callback for the app to be notified that the selection tool
+     * has been activated - onSelectionTool(true)
+     * or deactivated
+     * @type {function(boolean)|null}
+     */
+    this.onSelectionTool = null;
+
+
+    /**
      * callback
      * @type {function()|null}
      */
@@ -93,29 +114,47 @@ class Toolbar {
     up.addEventListener('click', () => {if(this.onMoveUp) this.onMoveUp()});
     var down = this.element.querySelector('.move-element .down');
     down.addEventListener('click', () => {if(this.onMoveDown) this.onMoveDown()});
-
-    // responsizer button
-    this.responsizerElement.addEventListener('click', () => {if(this.onResponsize) this.onResponsize()});
   }
 
+
+  /**
+   * a new document is loaded
+   * @param {HTMLDocument} doc
+   */
+  init(doc) {
+    // reset selection tool
+    this.selectElement.classList.add('off');
+  }
 
   /**
    * @param {Event} e
    */
   onClick(e) {
     var element = e.target;
-    if(element.classList.contains('mobile')) {
+    if(element.classList.contains('select')) {
+      this.selectElement.classList.toggle('off');
+      if (this.onSelectionTool) {
+        this.onSelectionTool(!this.selectElement.classList.contains('off'));
+      }
+    }
+    else if(element.classList.contains('mobile')) {
       this.setDevice(Device.mobile);
     }
-    if(element.classList.contains('mobile-h')) {
+    else if(element.classList.contains('mobile-h')) {
       this.setDevice(Device.mobileH);
     }
-    if(element.classList.contains('tablet')) {
+    else if(element.classList.contains('tablet')) {
       this.setDevice(Device.tablet);
     }
-    if(element.classList.contains('desktop')) {
+    else if(element.classList.contains('desktop')) {
       this.setDevice(Device.desktop);
     }
+    else if(element.classList.contains('responsizer')) {
+      if(this.onResponsize) this.onResponsize();
+      this.redraw();
+    }
+    e.preventDefault();
+    return false;
   }
 
 
@@ -143,11 +182,36 @@ class Toolbar {
    * the selection has changed
    */
   setSelection(elements) {
-    if (elements && elements.length>0) {
+    this.selection = elements;
+    this.redraw();
+  }
+
+  /**
+   * redraw the elements depending on the selection
+   */
+  redraw() {
+    console.log('xxx', this.selection);
+    if (this.selection && this.selection.length>0) {
       this.moveButtonsElement.classList.remove('disabled');
+      // is responsized
+      this.responsizerElement.classList.remove('disabled');
+      let isResponsized = false;
+      this.selection.forEach((element) => {
+        if (element.classList.contains('rsz-responsized')) {
+          isResponsized = true;
+        }
+      });
+    console.log('xxx', this.selection);
+      if (isResponsized) {
+        this.responsizerElement.classList.remove('off');
+      }
+      else {
+        this.responsizerElement.classList.add('off');
+      }
     }
     else {
       this.moveButtonsElement.classList.add('disabled');
+      this.responsizerElement.classList.add('disabled');
     }
   }
 }

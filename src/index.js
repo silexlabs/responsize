@@ -4,7 +4,7 @@ window.addEventListener('load', (e) => {
   var appElement = document.getElementById('app');
   var app = new App(appElement);
   var query = getQueryParams(document.location.search);
-  var url = query.url || 'test/silex-mobile/';
+  var url = query.url || 'test/silex/';
   app.importWebsite(url);
 });
 

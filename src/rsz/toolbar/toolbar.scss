@@ -49,9 +49,24 @@
   .desktop {
     background-image: url('/assets/imac-blanc.png');
   }
+  .select {
+    background-image: url(/assets/select.png);
+    height: 100%;
+    width: 46px;
+    margin-left: 20px;
+    display: inline-block;
+    background-size: contain;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    @include glow();
+    opacity: 1;
+    &.off {
+      opacity: .5;
+    }
+  }
   .move-element {
     display: inline-block;
-    margin-left: 20px;
+    margin-left: 15px;
     .up, .down {
       width: 60px;
       height: ($toolbarHeight / 2) - 13;
@@ -82,11 +97,21 @@
   .responsizer {
     background-image: url(/assets/responsize.png);
     height: 100%;
-    width: 150px;
+    width: 46px;
     display: inline-block;
     background-size: contain;
     background-repeat: no-repeat;
     cursor: pointer;
+    @include glow();
+    opacity: 1;
+    &.off {
+      opacity: .5;
+    }
+    &.disabled {
+      &, &:hover {
+        opacity: .1;
+      }
+    }
   }
 }
 

@@ -42,6 +42,7 @@ class App {
 
     // bind components together
     this.toolbar.onSize = (w, h) => this.stage.setSize(w, h);
+    this.toolbar.onSelectionTool = (activated) => this.wysiwyg.setSelectionMode(activated);
     this.toolbar.onMoveDown = () => this.wysiwyg.moveDown();
     this.toolbar.onMoveUp = () => this.wysiwyg.moveUp();
     this.toolbar.onResponsize = () => this.responsizer.responsize(this.wysiwyg.getSelected());
@@ -60,6 +61,7 @@ class App {
     this.stage.setUrl(url).then((doc) => {
       this.wysiwyg.init(doc);
       this.responsizer.init(doc);
+      this.toolbar.init(doc);
     });
   }
 }
