@@ -3,6 +3,7 @@ goog.provide('rsz.App');
 goog.require('rsz.Toolbar');
 goog.require('rsz.Stage');
 goog.require('rsz.Wysiwyg');
+goog.require('rsz.Responsizer');
 
 
 /**
@@ -33,10 +34,17 @@ class App {
     this.wysiwyg = new Wysiwyg(element.querySelector('#stage'));
 
 
+    /**
+     * @type {Responsizer}
+     */
+    this.responsizer = new Responsizer();
+
+
     // bind components together
     this.toolbar.onSize = (w, h) => this.stage.setSize(w, h);
     this.toolbar.onMoveDown = () => this.wysiwyg.moveDown();
     this.toolbar.onMoveUp = () => this.wysiwyg.moveUp();
+    this.toolbar.onResponsize = () => this.responsizer.responsize(this.wysiwyg.getSelected());
     this.wysiwyg.onSelect = () => this.toolbar.setSelection(this.wysiwyg.getSelected());
 
     // init
@@ -49,7 +57,10 @@ class App {
    * @param {string} url
    */
   importWebsite(url) {
-    this.stage.setUrl(url).then((doc) => this.wysiwyg.init(doc));
+    this.stage.setUrl(url).then((doc) => {
+      this.wysiwyg.init(doc);
+      this.responsizer.init(doc);
+    });
   }
 }
 

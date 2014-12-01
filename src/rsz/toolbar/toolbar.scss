@@ -54,7 +54,7 @@
     margin-left: 20px;
     .up, .down {
       width: 60px;
-      height: 17px;
+      height: ($toolbarHeight / 2) - 13;
       background-size: contain;
       background-repeat: no-repeat;
       cursor: pointer;
@@ -78,6 +78,15 @@
         opacity: .1;
       }
     }
+  }
+  .responsizer {
+    background-image: url(/assets/responsize.png);
+    height: 100%;
+    width: 150px;
+    display: inline-block;
+    background-size: contain;
+    background-repeat: no-repeat;
+    cursor: pointer;
   }
 }
 

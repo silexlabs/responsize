@@ -52,6 +52,12 @@ class Toolbar {
     
 
     /**
+     * @type {Element}
+     */
+    this.responsizerElement = this.element.querySelector('.responsizer');
+    
+
+    /**
      * callback
      * @type {function()|null}
      */
@@ -72,6 +78,13 @@ class Toolbar {
     this.onSize = null;
 
 
+    /**
+     * callback
+     * @type {function()|null}
+     */
+    this.onResponsize = null;
+
+
     // handle click
     this.element.addEventListener('click', (e) => this.onClick(e));
 
@@ -80,6 +93,9 @@ class Toolbar {
     up.addEventListener('click', () => {if(this.onMoveUp) this.onMoveUp()});
     var down = this.element.querySelector('.move-element .down');
     down.addEventListener('click', () => {if(this.onMoveDown) this.onMoveDown()});
+
+    // responsizer button
+    this.responsizerElement.addEventListener('click', () => {if(this.onResponsize) this.onResponsize()});
   }
 
 
