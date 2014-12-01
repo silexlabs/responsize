@@ -42,6 +42,14 @@ class Wysiwyg {
      * the current document
      */
     this.doc = null;
+
+
+    /**
+     * callback to be notified when selection changes
+     * use getSelected() to retrive the selection
+     * @type {function()|null}
+     */
+    this.onSelect = null;
   }
 
 
@@ -133,6 +141,53 @@ class Wysiwyg {
 
 
   /**
+   * get the next sibling for the element
+   * @param {Element} target
+   * @return {Element|null}
+   */
+  getNextSibling(target) {
+    return this.getSibling(target, true);
+  }
+
+
+  /**
+   * get the previous sibling for the element
+   * @param {Element} target
+   * @return {Element|null}
+   */
+  getPreviousSibling(target) {
+    return this.getSibling(target, false);
+  }
+
+
+  /**
+   * get the previous or next sibling for the element
+   * @param {Element} element
+   * @param {boolean} wantNext true if the next sibling is wanted, false for the previous one
+   * @return {Element|null}
+   */
+  getSibling(element, wantNext) {
+    let prev = null;
+    let len = element.parentNode.childNodes.length;
+    for(let idx=0; idx<len; idx++) {
+      //forward
+      let el = element.parentNode.childNodes[idx];
+      // backward
+      if(wantNext === false) {
+        el = element.parentNode.childNodes[(len - 1) - idx];
+      }
+      if(el.nodeType === 1) {
+        if(el === element) {
+          return prev;
+        }
+        prev = el;
+      }
+    }
+    return null;
+ }
+
+
+  /**
    * memorise mouse state
    * @param {Element} target
    * @param {number} x
@@ -159,7 +214,6 @@ class Wysiwyg {
     else {
       var candidates = this.doc.querySelectorAll('.rsz-select-candidate');
       for (let idx=0; idx<candidates.length; idx++) {
-        console.log(candidates);
         candidates[idx].classList.remove('rsz-select-candidate');
       }
       target.classList.add('rsz-select-candidate');
@@ -226,8 +280,10 @@ class Wysiwyg {
    * handle selection
    */
   select(element) {
-    console.log('select', element);
     element.classList.add('rsz-selected');
+    if(this.onSelect) {
+      this.onSelect();
+    }
   }
 
 
@@ -235,16 +291,49 @@ class Wysiwyg {
    * handle selection
    */
   unSelect(element) {
-    console.log('unselect', element);
     element.classList.remove('rsz-selected');
-  }
+    if(this.onSelect) {
+      this.onSelect();
+    }
+}
 
 
   /**
    * handle selection
    */
   toggleSelect(element) {
-    console.log('toggle', element);
     element.classList.toggle('rsz-selected');
+    if(this.onSelect) {
+      this.onSelect();
+    }
+  }
+
+
+  /**
+   * move up the selected elements in the Dom
+   * FIXME: will not handle multi selection properly like this
+   */
+  moveUp() {
+    this.getSelected().forEach((element) => {
+      let sibling = this.getNextSibling(element);
+      if(sibling) {
+        element.parentNode.insertBefore(element, sibling);
+      }
+    });
+  }
+
+
+  /**
+   * move down the selected elements in the Dom
+   * FIXME: will not handle multi selection properly like this
+   */
+  moveDown() {
+    this.getSelected().forEach((element) => {
+      let sibling = this.getPreviousSibling(element);
+      if(sibling) {
+        element.parentNode.insertBefore(sibling, element);
+      }
+    });
   }
 }
+

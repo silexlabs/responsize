@@ -34,7 +34,11 @@ class App {
 
 
     // bind components together
-    this.toolbar.onSize = this.setSize.bind(this);
+    this.toolbar.onSize = (w, h) => this.stage.setSize(w, h);
+    this.toolbar.onMoveDown = () => this.wysiwyg.moveDown();
+    this.toolbar.onMoveUp = () => this.wysiwyg.moveUp();
+    this.wysiwyg.onSelect = () => this.toolbar.setSelection(this.wysiwyg.getSelected());
+
     // init
     this.toolbar.setDevice(Device.desktop);
   }
@@ -46,16 +50,6 @@ class App {
    */
   importWebsite(url) {
     this.stage.setUrl(url).then((doc) => this.wysiwyg.init(doc));
-  }
-
-
-  /**
-   * change the rendering size of the website
-   * @param {number} w
-   * @param {number} h
-   */
-  setSize(w, h) {
-    this.stage.setSize(w, h);
   }
 }
 

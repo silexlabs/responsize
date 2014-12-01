@@ -34,6 +34,7 @@ class Toolbar {
   constructor(element) {
     /**
      * the container for this component
+     * @type {Element};
      */
     this.element = element;
     
@@ -43,7 +44,27 @@ class Toolbar {
      */
     this.selectedDevice = Device.desktop;
     
+
+    /**
+     * @type {Element}
+     */
+    this.moveButtonsElement = this.element.querySelector('.move-element');
     
+
+    /**
+     * callback
+     * @type {function()|null}
+     */
+    this.onMoveUp = null;
+
+
+    /**
+     * callback
+     * @type {function()|null}
+     */
+    this.onMoveDown = null;
+
+
     /**
      * callback
      * @type {function(number, number)|null}
@@ -53,6 +74,12 @@ class Toolbar {
 
     // handle click
     this.element.addEventListener('click', (e) => this.onClick(e));
+
+    // handle move buttons
+    var up = this.element.querySelector('.move-element .up');
+    up.addEventListener('click', () => {if(this.onMoveUp) this.onMoveUp()});
+    var down = this.element.querySelector('.move-element .down');
+    down.addEventListener('click', () => {if(this.onMoveDown) this.onMoveDown()});
   }
 
 
@@ -92,6 +119,19 @@ class Toolbar {
     // notify the controller
     if (this.onSize) {
       this.onSize(DeviceData[device].width, DeviceData[device].height);
+    }
+  }
+
+
+  /**
+   * the selection has changed
+   */
+  setSelection(elements) {
+    if (elements && elements.length>0) {
+      this.moveButtonsElement.classList.remove('disabled');
+    }
+    else {
+      this.moveButtonsElement.classList.add('disabled');
     }
   }
 }

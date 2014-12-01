@@ -1,3 +1,10 @@
+@import '/src/rsz/app.scss';
+
+@mixin glow() {
+  filter: drop-shadow(0 0 17px rgba(255, 255, 255, 0.8));
+  -webkit-filter: drop-shadow(0 0 17px rgba(255, 255, 255, 0.8));
+}
+
 .toolbar {
   background-color: $color1;
   height: $toolbarHeight - 20;
@@ -27,8 +34,7 @@
     display: inline-block;
   }
   .device.selected {
-    filter: drop-shadow(0 0 17px rgba(255, 255, 255, 0.8));
-    -webkit-filter: drop-shadow(0 0 17px rgba(255, 255, 255, 0.8));
+    @include glow();
     opacity: 1;
   }
   .mobile {
@@ -43,4 +49,35 @@
   .desktop {
     background-image: url('/assets/imac-blanc.png');
   }
+  .move-element {
+    display: inline-block;
+    margin-left: 20px;
+    .up, .down {
+      width: 60px;
+      height: 17px;
+      background-size: contain;
+      background-repeat: no-repeat;
+      cursor: pointer;
+    }
+    .up {
+      background-image: url('/assets/arrow-up.png');
+      margin-bottom: 6px;
+    }
+    .down{
+      background-image: url('/assets/arrow-down.png');
+    }
+    .up, .down {
+      opacity: .5;
+    }
+    .up:hover, .down:hover {
+      @include glow();
+      opacity: 1;
+    }
+    &.disabled {
+      .up, .down, .up:hover, .down:hover {
+        opacity: .1;
+      }
+    }
+  }
 }
+
