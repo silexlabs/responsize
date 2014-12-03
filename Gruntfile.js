@@ -6,7 +6,7 @@ module.exports = function(grunt) {
 
   // js
   grunt.loadNpmTasks('grunt-closure-tools');
-  
+
   // css
   require('load-grunt-tasks')(grunt);
 

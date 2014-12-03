@@ -2,6 +2,7 @@ goog.provide('rsz.Toolbar');
 
 /**
  * @enum {number}
+ * @export
  */
 var Device = {
   mobile: 0,
@@ -14,6 +15,7 @@ var Device = {
 
 /**
  * @type {Array.<{width: number, height: number}>}
+ * @export
  */
 var DeviceData = [
   {name: 'mobile', width: 320, height: 480}, // bootstrap xs
@@ -26,6 +28,7 @@ var DeviceData = [
 
 /**
  * This class handles the tools selection
+ * @export
  * @class
  */
 class Toolbar {
@@ -122,6 +125,7 @@ class Toolbar {
   /**
    * a new document is loaded
    * @param {HTMLDocument} doc
+   * @export
    */
   init(doc) {
     // reset selection tool
@@ -162,6 +166,7 @@ class Toolbar {
 
   /**
    * @param {number} device
+   * @export
    */
   setDevice(device) {
     this.selectedDevice = device;
@@ -182,6 +187,7 @@ class Toolbar {
 
   /**
    * the selection has changed
+   * @export
    */
   setSelection(elements) {
     this.selection = elements;
@@ -190,9 +196,9 @@ class Toolbar {
 
   /**
    * redraw the elements depending on the selection
+   * @export
    */
   redraw() {
-    console.log('xxx', this.selection);
     if (this.selection && this.selection.length>0) {
       this.moveButtonsElement.classList.remove('disabled');
       // is responsized

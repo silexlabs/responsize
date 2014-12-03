@@ -3,6 +3,7 @@ goog.provide('rsz.Wysiwyg');
 /**
  * This class gives the user the ability to drag and drop the elements on the stage
  * @class
+ * @export
  */
 class Wysiwyg {
   /**
@@ -63,6 +64,7 @@ class Wysiwyg {
   /**
    * init the drag and drop events
    * @param {HTMLDocument} doc
+   * @export
    */
   init(doc) {
     // reset selection mode
@@ -124,6 +126,7 @@ class Wysiwyg {
   /**
    * selection mode
    * @param {boolean} activated
+   * @export
    */
   setSelectionMode(activated) {
     this.selectionMode = activated;
@@ -140,6 +143,7 @@ class Wysiwyg {
    * i.e. the first parent with siblings
    * @param {Element} target
    * @return {Element}
+   * @export
    */
   getBestElement(target) {
     /** @type {Element} */ 
@@ -155,6 +159,7 @@ class Wysiwyg {
   /**
    * counts the number of siblings of type Element
    * @return {boolean} true if the element has siblings
+   * @export
    */
   hasSiblings(element) {
     let numChildren = 0;
