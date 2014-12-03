@@ -3,6 +3,7 @@ goog.provide('rsz.Stage');
 /**
  * Stage class handles the website in the iframe
  * @class
+ * @export
  */
 class Stage {
   /**
@@ -42,6 +43,7 @@ class Stage {
    * change the rendering size of the website
    * @param {number} w
    * @param {number} h
+   * @export
    */
   setSize(w, h) {
     // store the new size
@@ -56,6 +58,7 @@ class Stage {
    * refresh display
    * apply the real size to the iframe
    * use css transform to fit the container
+   * @export
    */
   redraw() {
     // apply the real size
@@ -88,6 +91,7 @@ class Stage {
   /**
    * @param {string} url
    * @return {Promise}
+   * @export
    */
   setUrl(url) {
     let promise = new Promise((resolve, reject) => {

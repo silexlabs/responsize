@@ -7,7 +7,8 @@ var Device = {
   mobile: 0,
   mobileH: 1,
   tablet: 2,
-  desktop: 3
+  tabletH: 3,
+  desktop: 4
 };
 
 
@@ -15,10 +16,11 @@ var Device = {
  * @type {Array.<{width: number, height: number}>}
  */
 var DeviceData = [
-  {name: 'mobile', width: 320, height: 480},
-  {name: 'mobile-h', width: 476, height: 320},
-  {name: 'tablet', width: 768, height: 1024},
-  {name: 'desktop', width: 1280, height: 800},
+  {name: 'mobile', width: 320, height: 480}, // bootstrap xs
+  {name: 'mobile-h', width: 476, height: 320}, // xs
+  {name: 'tablet', width: 768, height: 1024}, // sm
+  {name: 'tablet-h', width: 1024, height: 768}, // md
+  {name: 'desktop', width: 1280, height: 800}, // lg
 ]
 
 

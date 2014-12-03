@@ -1,11 +1,14 @@
 {
   "name": "responsize",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "authors": [
     "lexoyo <a.hoyau@silexlabs.org>"
   ],
   "description": "Responsize is the tool to make any website responsive, quickly and efficiently.",
-  "main": "dist/client/index.html",
+  "main": [
+    "dist/client/responsize.js",
+    "dist/client/responsize.css"
+  ],
   "keywords": [
     "responsive",
     "design",
@@ -25,9 +28,5 @@
     "bower_components",
     "test",
     "tests"
-  ],
-  "devDependencies": {
-    "closure-compiler": "~0.2.6"
-  },
-  "dependencies": {}
+  ]
 }

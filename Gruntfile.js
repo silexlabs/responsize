@@ -25,19 +25,21 @@ module.exports = function(grunt) {
       },
       dist: {
         files: {
-          'dist/client/responsize.css': 'src/**/*.scss'
+          'dist/responsize.css': 'src/**/*.scss'
         }
       }
     },
     closureCompiler:{
       options: {
-        compilerFile: 'bower_components/closure-compiler/lib/vendor/compiler.jar',
+        compilerFile: 'build/closure-compiler.jar',
         checkModified: false,
         compilerOpts: {
+          process_closure_primitives: '',
+          generate_exports: '',
           compilation_level: 'ADVANCED_OPTIMIZATIONS',
           jscomp_error: ['accessControls', 'ambiguousFunctionDecl', 'checkRegExp', 'checkTypes', 'checkVars', 'const', 'constantProperty', 'deprecated', 'duplicateMessage', 'es5Strict', 'externsValidation', 'fileoverviewTags', 'globalThis', 'internetExplorerChecks', 'invalidCasts', 'missingProperties', 'nonStandardJsDocs', 'strictModuleDepCheck', 'typeInvalidation', 'undefinedNames', 'undefinedVars', 'unknownDefines', 'uselessCode', 'visibility'],
           warning_level: 'VERBOSE',
-          create_source_map: 'dist/client/responsize.js.map',
+          create_source_map: 'dist/responsize.js.map',
           language_in: 'ECMASCRIPT6_STRICT',
           language_out: 'ECMASCRIPT3',
           source_map_format: 'V3',
@@ -47,12 +49,12 @@ module.exports = function(grunt) {
       },
       all: {
         src: 'src/**/*.js',
-        dest: 'dist/client/responsize.js'
+        dest: 'dist/responsize.js'
       }
     },
     bower: {
       dev: {
-        dest: 'dist/client/libs',
+        dest: 'dist/libs',
         options: {
           expand: true,
           ignorePackages: ['closure-compiler'],
@@ -62,7 +64,7 @@ module.exports = function(grunt) {
     },
     watch: {
       options: {
-        livereload: true
+        livereload: false
       },
       js: {
         files: ['src/**/*.js', 'Gruntfile.js'],
@@ -82,7 +84,7 @@ module.exports = function(grunt) {
         options: {
         },
         files: {
-          'dist/client/index.html': 'src/index.jade'
+          'dist/index.html': 'src/index.jade'
         }
       }
     },
@@ -90,7 +92,7 @@ module.exports = function(grunt) {
       server: {
         options: {
           livereload: true,
-          base: __dirname + '/dist/client/',
+          base: __dirname + '/dist/',
           port: 6969
         }
       }

@@ -113,5 +113,29 @@
       }
     }
   }
+  .bootstrap-cols {
+    height: 100%;
+    display: inline-block;
+    margin: 0;
+    width: 40%;
+    > li {
+      height: 100%;
+      width: 5%;
+      margin-right: 5px;
+      display: inline-block;
+      background-color: $color1;
+      cursor: pointer;
+      @include glow();
+      opacity: 1;
+      &.off {
+        opacity: .5;
+      }
+      &.disabled {
+        &, &:hover {
+          opacity: .1;
+        }
+      }
+    }
+  }
 }
 
