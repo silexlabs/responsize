@@ -1,17 +1,17 @@
-@import '/src/rsz/app.scss';
-
 @mixin glow() {
   filter: drop-shadow(0 0 17px rgba(255, 255, 255, 0.8));
   -webkit-filter: drop-shadow(0 0 17px rgba(255, 255, 255, 0.8));
 }
 
-.toolbar {
+rsz-toolbar {
   background-color: $color1;
   height: $toolbarHeight - 20;
   width: 100%;
   position: fixed;
   padding: 10px;
+}
 
+rsz-toolbar::shadow {
   ul {
     padding: 0;
     margin: 0;
@@ -45,6 +45,9 @@
   }
   .tablet {
     background-image: url('/assets/ipad-blanc.png');
+  }
+  .tablet-h {
+    background-image: url('/assets/ipad-blanc-h.png');
   }
   .desktop {
     background-image: url('/assets/imac-blanc.png');

@@ -2,7 +2,7 @@
 module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-connect');
-  grunt.loadNpmTasks('grunt-bower');
+  grunt.loadNpmTasks('grunt-bower-task');
 
   // js
   grunt.loadNpmTasks('grunt-closure-tools');
@@ -25,7 +25,7 @@ module.exports = function(grunt) {
       },
       dist: {
         files: {
-          'dist/responsize.css': 'src/**/*.scss'
+          'dist/responsize.css': 'src/index.scss'
         }
       }
     },
@@ -53,18 +53,16 @@ module.exports = function(grunt) {
       }
     },
     bower: {
-      dev: {
-        dest: 'dist/libs',
+      all: {
         options: {
-          expand: true,
-          ignorePackages: ['closure-compiler'],
-          keepExpandedHierarchy: false,
+          targetDir: './dist/lib/',
+          copy: true
         }
       }
     },
     watch: {
       options: {
-        livereload: false
+        livereload: true
       },
       js: {
         files: ['src/**/*.js', 'Gruntfile.js'],
@@ -84,14 +82,15 @@ module.exports = function(grunt) {
         options: {
         },
         files: {
-          'dist/index.html': 'src/index.jade'
+          'dist/index.html': 'src/index.jade',
+          'dist/components.html': 'src/components.jade'
         }
       }
     },
     connect: {
       server: {
         options: {
-          livereload: true,
+          livereload: false,
           base: __dirname + '/dist/',
           port: 6969
         }

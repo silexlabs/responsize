@@ -7,12 +7,14 @@ goog.provide('rsz.Stage');
  */
 class Stage {
   /**
-   * constructor
-   * @param {Element} element in which to display the website
+   * @constructor
+   * @param {HTMLElement} element in which to display the website
+   * @param {HTMLIFrameElement} iframe
    */
-  constructor(element) {
+  constructor(element, iframe) {
     /**
      * the container for this component
+     * @type {HTMLElement}
      */
     this.element = element;
 
@@ -20,7 +22,7 @@ class Stage {
     /**
      * @type {HTMLIFrameElement}
      */
-    this.iframe = /** @type {HTMLIFrameElement} */ (document.getElementById('iframe'));
+    this.iframe = iframe;
 
 
     /**
@@ -33,6 +35,7 @@ class Stage {
      * @type {number}
      */
     this.height= 1;
+
 
     // init
     window.addEventListener('resize', this.redraw.bind(this));
