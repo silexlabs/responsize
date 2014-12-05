@@ -43,7 +43,8 @@ module.exports = function(grunt) {
           language_in: 'ECMASCRIPT6_STRICT',
           language_out: 'ECMASCRIPT3',
           source_map_format: 'V3',
-          debug: false
+          debug: false,
+          externs: 'build/externs.js'
         },
         namespaces: 'rsz'
       },
@@ -53,12 +54,10 @@ module.exports = function(grunt) {
       }
     },
     bower: {
-      dev: {
-        dest: 'dist/libs',
+      all: {
         options: {
-          expand: true,
-          ignorePackages: ['closure-compiler'],
-          keepExpandedHierarchy: false,
+          targetDir: 'dist/lib',
+          copy: true
         }
       }
     },
@@ -67,7 +66,7 @@ module.exports = function(grunt) {
         livereload: true
       },
       js: {
-        files: ['src/**/*.js', 'Gruntfile.js'],
+        files: ['src/**/*.js', 'build/externs.js', 'Gruntfile.js'],
         tasks: ['closureCompiler']
       },
       html: {

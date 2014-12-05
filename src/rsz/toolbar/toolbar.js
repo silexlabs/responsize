@@ -59,13 +59,14 @@ class Toolbar {
     /**
      * @type {Element}
      */
-    this.responsizerElement = this.element.querySelector('.responsizer');
+    this.openElement = this.element.querySelector('.open');
     
+
 
     /**
      * @type {Element}
      */
-    this.selectElement = this.element.querySelector('.select');
+    this.saveElement = this.element.querySelector('.save');
     
 
     /**
@@ -75,12 +76,17 @@ class Toolbar {
     
 
     /**
-     * callback for the app to be notified that the selection tool
-     * has been activated - onSelectionTool(true)
-     * or deactivated
-     * @type {function(boolean)|null}
+     * callback for the app to be notified that the user wants to open a file
+     * @type {function()|null}
      */
-    this.onSelectionTool = null;
+    this.onOpenFile = null;
+
+
+    /**
+    * callback for the app to be notified that the user wants to save the current file
+     * @type {function()|null}
+     */
+    this.onSaveFile = null;
 
 
     /**
@@ -104,13 +110,6 @@ class Toolbar {
     this.onSize = null;
 
 
-    /**
-     * callback
-     * @type {function()|null}
-     */
-    this.onResponsize = null;
-
-
     // handle click
     this.element.addEventListener('click', (e) => this.onClick(e));
 
@@ -128,19 +127,38 @@ class Toolbar {
    * @export
    */
   init(doc) {
-    // reset selection tool
-    this.selectElement.classList.add('off');
+    // reset tools
+    this.setDirty(false);
   }
+
+
+  /**
+   * the current file has been modified but changes are not saved
+   */
+  setDirty(isDirty) {
+    if(isDirty) {
+      this.saveElement.classList.remove('off');
+    }
+    else {
+      this.saveElement.classList.add('off');
+    }
+  }
+
 
   /**
    * @param {Event} e
    */
   onClick(e) {
     var element = e.target;
-    if(element.classList.contains('select')) {
-      this.selectElement.classList.toggle('off');
-      if (this.onSelectionTool) {
-        this.onSelectionTool(!this.selectElement.classList.contains('off'));
+    if(element.classList.contains('open')) {
+      if (this.onOpenFile) {
+        this.onOpenFile();
+      }
+    }
+    if(element.classList.contains('save')) {
+      this.saveElement.classList.toggle('off');
+      if (this.onSaveFile) {
+        this.onSaveFile();
       }
     }
     else if(element.classList.contains('mobile')) {
@@ -154,10 +172,6 @@ class Toolbar {
     }
     else if(element.classList.contains('desktop')) {
       this.setDevice(Device.desktop);
-    }
-    else if(element.classList.contains('responsizer')) {
-      if(this.onResponsize) this.onResponsize();
-      this.redraw();
     }
     e.preventDefault();
     return false;
@@ -201,25 +215,9 @@ class Toolbar {
   redraw() {
     if (this.selection && this.selection.length>0) {
       this.moveButtonsElement.classList.remove('disabled');
-      // is responsized
-      this.responsizerElement.classList.remove('disabled');
-      let isResponsized = false;
-      this.selection.forEach((element) => {
-        if (element.classList.contains('rsz-responsized')) {
-          isResponsized = true;
-        }
-      });
-    console.log('xxx', this.selection);
-      if (isResponsized) {
-        this.responsizerElement.classList.remove('off');
-      }
-      else {
-        this.responsizerElement.classList.add('off');
-      }
     }
     else {
       this.moveButtonsElement.classList.add('disabled');
-      this.responsizerElement.classList.add('disabled');
     }
   }
 }

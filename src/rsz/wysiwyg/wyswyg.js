@@ -58,6 +58,14 @@ class Wysiwyg {
      * @type {function()|null}
      */
     this.onSelect = null;
+
+
+    /**
+     * callback to be notified when an element is about to be selected
+     * the callback can return true to confirm selection or false to prevent it
+     * @type {function(Element): boolean|null}
+     */
+    this.onBeforeSelect = null;
   }
 
 
@@ -149,7 +157,7 @@ class Wysiwyg {
     /** @type {Element} */ 
     let best = target;
     // loop while we have no siblings
-    while(best && !this.hasSiblings(best)) {
+    while(best && !this.onBeforeSelect(best)) {
       best = /** @type {Element} */ (best.parentNode);
     }
     return best || target;

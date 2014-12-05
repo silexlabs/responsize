@@ -1,0 +1,29 @@
+{
+  "name": "cloud-explorer",
+  "version": "1.0.0",
+  "homepage": "http://cloud-explorer.org/",
+  "authors": [
+    "lexoyo <a.hoyau@silexlabs.org> Thomas Fetiveau aka zabojad"
+  ],
+  "description": "A file manager for the cloud services such as dropbox and google drive. It is a front end javascript app developped with AngularJS and connecting to the node.js server https://github.com/silexlabs/unifile",
+  "keywords": [
+    "express",
+    "cloud",
+    "cms",
+    "rest",
+    "dropbox",
+    "storage",
+    "ftp",
+    "filepicker",
+    "api",
+    "haxe"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

@@ -47,14 +47,20 @@
   .desktop {
     background-image: url('assets/imac-blanc.png');
   }
-  .select {
-    background-image: url('assets/select.png');
+  .button {
+    &.open {
+      background-image: url('assets/open.png');
+    }
+    &.save {
+      background-image: url('assets/save.png');
+    }
     height: 100%;
     width: 46px;
     margin-left: 20px;
     display: inline-block;
     background-size: contain;
     background-repeat: no-repeat;
+    background-position: 50%;
     cursor: pointer;
     @include glow();
     opacity: 1;
@@ -89,49 +95,6 @@
     &.disabled {
       .up, .down, .up:hover, .down:hover {
         opacity: .1;
-      }
-    }
-  }
-  .responsizer {
-    background-image: url('assets/responsize.png');
-    height: 100%;
-    width: 46px;
-    display: inline-block;
-    background-size: contain;
-    background-repeat: no-repeat;
-    cursor: pointer;
-    @include glow();
-    opacity: 1;
-    &.off {
-      opacity: .5;
-    }
-    &.disabled {
-      &, &:hover {
-        opacity: .1;
-      }
-    }
-  }
-  .bootstrap-cols {
-    height: 100%;
-    display: inline-block;
-    margin: 0;
-    width: 40%;
-    > li {
-      height: 100%;
-      width: 5%;
-      margin-right: 5px;
-      display: inline-block;
-      background-color: $color1;
-      cursor: pointer;
-      @include glow();
-      opacity: 1;
-      &.off {
-        opacity: .5;
-      }
-      &.disabled {
-        &, &:hover {
-          opacity: .1;
-        }
       }
     }
   }

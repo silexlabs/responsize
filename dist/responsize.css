@@ -58,19 +58,23 @@ body {
     background-image: url('assets/ipad-blanc.png'); }
   .toolbar .desktop {
     background-image: url('assets/imac-blanc.png'); }
-  .toolbar .select {
-    background-image: url('assets/select.png');
+  .toolbar .button {
     height: 100%;
     width: 46px;
     margin-left: 20px;
     display: inline-block;
     background-size: contain;
     background-repeat: no-repeat;
+    background-position: 50%;
     cursor: pointer;
     filter: drop-shadow(0 0 17px rgba(255, 255, 255, 0.8));
     -webkit-filter: drop-shadow(0 0 17px rgba(255, 255, 255, 0.8));
     opacity: 1; }
-    .toolbar .select.off {
+    .toolbar .button.open {
+      background-image: url('assets/open.png'); }
+    .toolbar .button.save {
+      background-image: url('assets/save.png'); }
+    .toolbar .button.off {
       opacity: .5; }
   .toolbar .move-element {
     display: inline-block;
@@ -94,37 +98,6 @@ body {
       opacity: 1; }
     .toolbar .move-element.disabled .up, .toolbar .move-element.disabled .down, .toolbar .move-element.disabled .up:hover, .toolbar .move-element.disabled .down:hover {
       opacity: .1; }
-  .toolbar .responsizer {
-    background-image: url('assets/responsize.png');
-    height: 100%;
-    width: 46px;
-    display: inline-block;
-    background-size: contain;
-    background-repeat: no-repeat;
-    cursor: pointer;
-    filter: drop-shadow(0 0 17px rgba(255, 255, 255, 0.8));
-    -webkit-filter: drop-shadow(0 0 17px rgba(255, 255, 255, 0.8));
-    opacity: 1; }
-    .toolbar .responsizer.off {
-      opacity: .5; }
-    .toolbar .responsizer.disabled, .toolbar .responsizer.disabled:hover {
-      opacity: .1; }
-  .toolbar .bootstrap-cols {
-    height: 100%;
-    display: inline-block;
-    margin: 0;
-    width: 40%; }
-    .toolbar .bootstrap-cols > li {
-      height: 100%;
-      width: 5%;
-      margin-right: 5px;
-      display: inline-block;
-      background-color: #313131;
-      cursor: pointer;
-      filter: drop-shadow(0 0 17px rgba(255, 255, 255, 0.8));
-      -webkit-filter: drop-shadow(0 0 17px rgba(255, 255, 255, 0.8));
-      opacity: 1; }
-      .toolbar .bootstrap-cols > li.off {
-        opacity: .5; }
-      .toolbar .bootstrap-cols > li.disabled, .toolbar .bootstrap-cols > li.disabled:hover {
-        opacity: .1; }
+
+#ce-js {
+  z-index: 100; }
