@@ -13,7 +13,7 @@ $stageLeft: 10px;
 $stageRight: 10px;
 
 
-@import 'src/rsz/app/app';
-@import 'src/rsz/stage/stage';
-@import 'src/rsz/toolbar/toolbar';
-
+body {
+  background-color: $color0;
+  margin: 0;
+}

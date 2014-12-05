@@ -1,12 +1,2 @@
-polymer-element(name="rsz-stage")
-  template
-    iframe#iframe
-
-  script.
-    Polymer({
-      controller: null,
-      ready: function() {
-        this.controller = new Stage(this, this.$.iframe);
-      }
-    });
-
+#stage.stage
+  iframe#iframe

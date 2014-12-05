@@ -1,35 +1,24 @@
-polymer-element(name="rsz-toolbar")
-  template
-    #toolbar.toolbar
-      ul#devicesElement
-        li.device.desktop
-        li.device.tablet-h
-        li.device.tablet
-        li.device.mobile-h
-        li.device.mobile
-      .select.off
-      #moveButtonsElement.move-element.disabled
-        .up
-        .down
-      ol#widthElement.bootstrap-cols
-        li.off.disabled.col-xx-1
-        li.off.disabled.col-xx-2
-        li.off.disabled.col-xx-3
-        li.off.disabled.col-xx-4
-        li.off.disabled.col-xx-5
-        li.off.disabled.col-xx-6
-        li.off.disabled.col-xx-7
-        li.off.disabled.col-xx-8
-        li.off.disabled.col-xx-9
-        li.off.disabled.col-xx-10
-        li.off.disabled.col-xx-11
-        li.off.disabled.col-xx-12
-      #responsizerElement.responsizer.disabled.off
-  script.
-    Polymer({
-      controller: null,
-      ready: function() {
-        this.controller = new Toolbar(this, this.$.toolbar);
-      }
-    });
-
+#toolbar.toolbar
+  ul
+    li.device.desktop
+    li.device.tablet
+    li.device.mobile-h
+    li.device.mobile
+  .select.off
+  .move-element.disabled
+    .up
+    .down
+  ol.bootstrap-cols
+    li.off.disabled.col-xx-1
+    li.off.disabled.col-xx-2
+    li.off.disabled.col-xx-3
+    li.off.disabled.col-xx-4
+    li.off.disabled.col-xx-5
+    li.off.disabled.col-xx-6
+    li.off.disabled.col-xx-7
+    li.off.disabled.col-xx-8
+    li.off.disabled.col-xx-9
+    li.off.disabled.col-xx-10
+    li.off.disabled.col-xx-11
+    li.off.disabled.col-xx-12
+  .responsizer.disabled.off

@@ -36,7 +36,7 @@ class Toolbar {
    * constructor
    * @param {Element} element in which to display the website
    */
-  constructor(element, toolbarElement) {
+  constructor(element) {
     /**
      * the container for this component
      * @type {Element};
@@ -53,25 +53,19 @@ class Toolbar {
     /**
      * @type {Element}
      */
-    this.devicesElement = toolbarElement.querySelector('#devicesElement');
-    
-
-     /**
-     * @type {Element}
-     */
-    this.moveButtonsElement = toolbarElement.querySelector('#moveButtonsElement');
+    this.moveButtonsElement = this.element.querySelector('.move-element');
     
 
     /**
      * @type {Element}
      */
-    this.responsizerElement = toolbarElement.querySelector('#responsizerElement');
+    this.responsizerElement = this.element.querySelector('.responsizer');
     
 
     /**
      * @type {Element}
      */
-    this.widthElement = toolbarElement.querySelector('#widthElement');
+    this.selectElement = this.element.querySelector('.select');
     
 
     /**
@@ -116,13 +110,14 @@ class Toolbar {
      */
     this.onResponsize = null;
 
+
     // handle click
-    this.devicesElement.addEventListener('click', (e) => this.onClickDevice(e));
+    this.element.addEventListener('click', (e) => this.onClick(e));
 
     // handle move buttons
-    var up = this.moveButtonsElement.querySelector('.move-element .up');
+    var up = this.element.querySelector('.move-element .up');
     up.addEventListener('click', () => {if(this.onMoveUp) this.onMoveUp()});
-    var down = this.moveButtonsElement.querySelector('.move-element .down');
+    var down = this.element.querySelector('.move-element .down');
     down.addEventListener('click', () => {if(this.onMoveDown) this.onMoveDown()});
   }
 
@@ -133,19 +128,22 @@ class Toolbar {
    * @export
    */
   init(doc) {
-    console.log('init');
     // reset selection tool
-    this.widthElement.classList.add('off');
+    this.selectElement.classList.add('off');
   }
-
 
   /**
    * @param {Event} e
    */
-  onClickDevice(e) {
-    console.log('click', e);
+  onClick(e) {
     var element = e.target;
-    if(element.classList.contains('mobile')) {
+    if(element.classList.contains('select')) {
+      this.selectElement.classList.toggle('off');
+      if (this.onSelectionTool) {
+        this.onSelectionTool(!this.selectElement.classList.contains('off'));
+      }
+    }
+    else if(element.classList.contains('mobile')) {
       this.setDevice(Device.mobile);
     }
     else if(element.classList.contains('mobile-h')) {
@@ -153,9 +151,6 @@ class Toolbar {
     }
     else if(element.classList.contains('tablet')) {
       this.setDevice(Device.tablet);
-    }
-    else if(element.classList.contains('tablet-h')) {
-      this.setDevice(Device.tabletH);
     }
     else if(element.classList.contains('desktop')) {
       this.setDevice(Device.desktop);
@@ -176,19 +171,19 @@ class Toolbar {
   setDevice(device) {
     this.selectedDevice = device;
     // remove old selection
-    let oldSelection = this.devicesElement.querySelectorAll('.selected');
+    let oldSelection = this.element.querySelectorAll('.selected');
     for (let idx=0; idx<oldSelection.length; idx++) {
       let element = oldSelection.item(idx);
       element.classList.remove('selected');
     }
     // apply new selection
-    this.devicesElement.querySelector('.' + DeviceData[device].name).classList.add('selected');
+    this.element.querySelector('.' + DeviceData[device].name).classList.add('selected');
     // notify the controller
     if (this.onSize) {
       this.onSize(DeviceData[device].width, DeviceData[device].height);
     }
-    this.redraw();
   }
+
 
   /**
    * the selection has changed
