@@ -1,5 +1,3 @@
-@import '/src/rsz/app.scss';
-
 @mixin glow() {
   filter: drop-shadow(0 0 17px rgba(255, 255, 255, 0.8));
   -webkit-filter: drop-shadow(0 0 17px rgba(255, 255, 255, 0.8));
@@ -38,19 +36,19 @@
     opacity: 1;
   }
   .mobile {
-    background-image: url('/assets/iphone-blanc.png');
+    background-image: url('assets/iphone-blanc.png');
   }
   .mobile-h {
-    background-image: url('/assets/iphone-blanc-h.png');
+    background-image: url('assets/iphone-blanc-h.png');
   }
   .tablet {
-    background-image: url('/assets/ipad-blanc.png');
+    background-image: url('assets/ipad-blanc.png');
   }
   .desktop {
-    background-image: url('/assets/imac-blanc.png');
+    background-image: url('assets/imac-blanc.png');
   }
   .select {
-    background-image: url(/assets/select.png);
+    background-image: url('assets/select.png');
     height: 100%;
     width: 46px;
     margin-left: 20px;
@@ -75,11 +73,11 @@
       cursor: pointer;
     }
     .up {
-      background-image: url('/assets/arrow-up.png');
+      background-image: url('assets/arrow-up.png');
       margin-bottom: 6px;
     }
     .down{
-      background-image: url('/assets/arrow-down.png');
+      background-image: url('assets/arrow-down.png');
     }
     .up, .down {
       opacity: .5;
@@ -95,7 +93,7 @@
     }
   }
   .responsizer {
-    background-image: url(/assets/responsize.png);
+    background-image: url('assets/responsize.png');
     height: 100%;
     width: 46px;
     display: inline-block;

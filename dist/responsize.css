@@ -2,10 +2,6 @@ body {
   background-color: #808080;
   margin: 0; }
 
-body {
-  background-color: #808080;
-  margin: 0; }
-
 .stage {
   top: 70px;
   left: 10px;
@@ -24,10 +20,6 @@ body {
     transition: width .5s, top .5s, left .5s, height .5s, transform .5s;
     -webkit-transition: width .5s, top .5s, left .5s, height .5s, transform .5s;
     -moz-transition: width .5s, top .5s, left .5s, height .5s, transform .5s; }
-
-body {
-  background-color: #808080;
-  margin: 0; }
 
 .toolbar {
   background-color: #313131;
@@ -59,15 +51,15 @@ body {
     -webkit-filter: drop-shadow(0 0 17px rgba(255, 255, 255, 0.8));
     opacity: 1; }
   .toolbar .mobile {
-    background-image: url('/assets/iphone-blanc.png'); }
+    background-image: url('assets/iphone-blanc.png'); }
   .toolbar .mobile-h {
-    background-image: url('/assets/iphone-blanc-h.png'); }
+    background-image: url('assets/iphone-blanc-h.png'); }
   .toolbar .tablet {
-    background-image: url('/assets/ipad-blanc.png'); }
+    background-image: url('assets/ipad-blanc.png'); }
   .toolbar .desktop {
-    background-image: url('/assets/imac-blanc.png'); }
+    background-image: url('assets/imac-blanc.png'); }
   .toolbar .select {
-    background-image: url(/assets/select.png);
+    background-image: url('assets/select.png');
     height: 100%;
     width: 46px;
     margin-left: 20px;
@@ -90,10 +82,10 @@ body {
       background-repeat: no-repeat;
       cursor: pointer; }
     .toolbar .move-element .up {
-      background-image: url('/assets/arrow-up.png');
+      background-image: url('assets/arrow-up.png');
       margin-bottom: 6px; }
     .toolbar .move-element .down {
-      background-image: url('/assets/arrow-down.png'); }
+      background-image: url('assets/arrow-down.png'); }
     .toolbar .move-element .up, .toolbar .move-element .down {
       opacity: .5; }
     .toolbar .move-element .up:hover, .toolbar .move-element .down:hover {
@@ -103,7 +95,7 @@ body {
     .toolbar .move-element.disabled .up, .toolbar .move-element.disabled .down, .toolbar .move-element.disabled .up:hover, .toolbar .move-element.disabled .down:hover {
       opacity: .1; }
   .toolbar .responsizer {
-    background-image: url(/assets/responsize.png);
+    background-image: url('assets/responsize.png');
     height: 100%;
     width: 46px;
     display: inline-block;

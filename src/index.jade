@@ -1,1 +1,21 @@
-include rsz/app.jade
+doctype html
+html(lang='en')
+  head
+    meta(charset='utf-8')
+    title Responsize
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+
+    // responsize imports
+    script(src='responsize.js')
+    link(href='responsize.css', rel='stylesheet')
+
+  body
+    // container for Responsize app
+    rsz-app#rsz-app
+      include rsz/app/app.jade
+
+    // Bootstrap Responsize app
+    script.
+      initResponsizeApp();
+
