@@ -1,5 +1,4 @@
 *.js.map
-*.html
 *.DS_Store
 .temp
 .cache
