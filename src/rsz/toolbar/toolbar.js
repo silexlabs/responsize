@@ -122,17 +122,6 @@ class Toolbar {
 
 
   /**
-   * a new document is loaded
-   * @param {HTMLDocument} doc
-   * @export
-   */
-  init(doc) {
-    // reset tools
-    this.setDirty(false);
-  }
-
-
-  /**
    * the current file has been modified but changes are not saved
    */
   setDirty(isDirty) {

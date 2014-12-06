@@ -20,7 +20,7 @@ class Stage {
     /**
      * @type {HTMLIFrameElement}
      */
-    this.iframe = /** @type {HTMLIFrameElement} */ (document.getElementById('iframe'));
+    this.iframe = /** @type {HTMLIFrameElement} */ (element.getElementsByTagName('iframe')[0]);
 
 
     /**
@@ -46,6 +46,7 @@ class Stage {
    * @export
    */
   setSize(w, h) {
+    console.log('setSize', w, h);
     // store the new size
     this.width = w;
     this.height = h;
@@ -64,24 +65,28 @@ class Stage {
     // apply the real size
     this.iframe.style.width = this.width + 'px';
     this.iframe.style.height = this.height + 'px';
+
     // det the scale to fit the container
-    let container = {
+    let containerSize = {
       w: this.element.offsetWidth,
       h: this.element.offsetHeight
     };
+    console.log('redraw', containerSize, this.iframe);
     let scale = {
-      x: container.w / this.width,
-      y: container.h / this.height
+      x: containerSize.w / this.width,
+      y: containerSize.h / this.height
     };
     let finalScale = Math.min(1, scale.x, scale.y);
+
     // apply the transform
     let str = 'scale(' + finalScale + ')';
     this.iframe.style.transform = str;
     this.iframe.style.transformOrigin = '0 0';
+
     // center in the container
     let offset = {
-      x: (container.w - (this.width * finalScale)) / 2,
-      y: (container.h - (this.height * finalScale)) / 2
+      x: (containerSize.w - (this.width * finalScale)) / 2,
+      y: (containerSize.h - (this.height * finalScale)) / 2
     };
     this.iframe.style.left = offset.x + 'px';
     this.iframe.style.top = offset.y + 'px';

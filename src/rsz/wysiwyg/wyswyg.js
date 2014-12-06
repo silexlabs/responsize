@@ -8,22 +8,8 @@ goog.provide('rsz.Wysiwyg');
 class Wysiwyg {
   /**
    * constructor
-   * @param {Element} element the stage element
    */
-  constructor(element) {
-    /**
-     * @type {Element}
-     * the stage element
-     */
-    this.element = element;
-
-
-    /**
-     * @type {HTMLIFrameElement}
-     */
-    this.iframe = /** @type {HTMLIFrameElement} */ (document.getElementById('iframe'));
-
-
+  constructor() {
     /**
      * selection mode on/off
      * @type {boolean}
@@ -46,10 +32,10 @@ class Wysiwyg {
 
 
     /**
-     * @type {HTMLDocument|null}
-     * the current document
+     * @type {Element|null}
+     * the current container
      */
-    this.doc = null;
+    this.container = null;
 
 
     /**
@@ -58,6 +44,24 @@ class Wysiwyg {
      * @type {function()|null}
      */
     this.onSelect = null;
+
+
+    /**
+     * binded reference to use to attach / detach to events
+     */
+    this.onMouseDownBinded = this.onMouseDownCallback.bind(this);
+
+
+    /**
+     * binded reference to use to attach / detach to events
+     */
+    this.onMouseUpBinded = this.onMouseUpCallback.bind(this);
+
+
+    /**
+     * binded reference to use to attach / detach to events
+     */
+    this.onMouseMoveBinded = this.onMouseMoveCallback.bind(this);
 
 
     /**
@@ -71,47 +75,32 @@ class Wysiwyg {
 
   /**
    * init the drag and drop events
-   * @param {HTMLDocument} doc
+   * @param {Element} element
    * @export
    */
-  init(doc) {
-    // reset selection mode
-    this.selectionMode = false;
+  setContainer(element) {
+    // reset the previous container
+    if (this.container) {
+      this.container.removeEventListener('mousedown', this.onMouseDownBinded);
+      this.container.removeEventListener('mouseup', this.onMouseUpBinded);
+      this.container.removeEventListener('mousemove', this.onMouseMoveBinded);
+    }
+
     // store for later use
-    this.doc= doc;
+    this.container = element;
+
+    // update selection mode
+    this.setSelectionMode(this.selectionMode);
+
     // add the mouse events
-    doc.addEventListener('mouseup', (e) => {
-      this.onMouseUp(
-        this.getBestElement(/** @type {Element} */ (e.target)),
-        e.clientX,
-        e.clientY,
-        e.shiftKey
-      );
-      e.preventDefault();
-      return false;
-    });
-    doc.addEventListener('mousedown', (e) => {
-      this.onMouseDown(
-        this.getBestElement(/** @type {Element} */ (e.target)),
-        e.clientX,
-        e.clientY
-      )
-      e.preventDefault();
-      return false;
-    });
-    doc.addEventListener('mousemove', (e) => {
-      this.onMouseMove(
-        this.getBestElement(/** @type {Element} */ (e.target)),
-        e.clientX,
-        e.clientY
-      )
-      e.preventDefault();
-      return false;
-    });
+    this.container.addEventListener('mouseup', this.onMouseUpBinded);
+    this.container.addEventListener('mousedown', this.onMouseDownBinded);
+    this.container.addEventListener('mousemove', this.onMouseMoveBinded);
+
     // reset mouse
     this.isDown = false;
     // insert styles
-    let styles = doc.createElement('style');
+    let styles = document.createElement('style');
     styles.innerHTML = '\
       .rsz-select-mode * {\
         min-width: 20px !important;\
@@ -127,7 +116,7 @@ class Wysiwyg {
         border: 1px solid orange !important;\
       }\
     ';
-    doc.head.appendChild(styles);
+    this.container.appendChild(styles);
   }
 
 
@@ -138,11 +127,13 @@ class Wysiwyg {
    */
   setSelectionMode(activated) {
     this.selectionMode = activated;
-    if(activated) {
-      this.doc.body.classList.add('rsz-select-mode');
-    }
-    else {
-      this.doc.body.classList.remove('rsz-select-mode');
+    if(this.container) {
+      if(activated) {
+        this.container.classList.add('rsz-select-mode');
+      }
+      else {
+        this.container.classList.remove('rsz-select-mode');
+      }
     }
   }
 
@@ -161,23 +152,6 @@ class Wysiwyg {
       best = /** @type {Element} */ (best.parentNode);
     }
     return best || target;
-  }
-
-
-  /**
-   * counts the number of siblings of type Element
-   * @return {boolean} true if the element has siblings
-   * @export
-   */
-  hasSiblings(element) {
-    let numChildren = 0;
-    for(let idx in element.parentNode.childNodes) {
-      let el = element.parentNode.childNodes[idx];
-      if(el.nodeType === 1) {
-        numChildren++;
-      }
-    }
-    return numChildren > 1;
   }
 
 
@@ -225,7 +199,52 @@ class Wysiwyg {
       }
     }
     return null;
- }
+  }
+
+
+  /**
+   * callback for mouse events
+   */
+  onMouseUpCallback(e) {
+    this.onMouseUp(
+      this.getBestElement(/** @type {Element} */ (e.target)),
+      e.clientX,
+      e.clientY,
+      e.shiftKey
+    );
+    e.preventDefault();
+    return false;
+  }
+
+
+  /**
+   * callback for mouse events
+   */
+  onMouseDownCallback(e) {
+    this.onMouseDown(
+      this.getBestElement(/** @type {Element} */ (e.target)),
+      e.clientX,
+      e.clientY,
+      e.shiftKey
+    )
+    e.preventDefault();
+    return false;
+  }
+
+
+  /**
+   * callback for mouse events
+   */
+  onMouseMoveCallback(e) {
+    this.onMouseMove(
+      this.getBestElement(/** @type {Element} */ (e.target)),
+      e.clientX,
+      e.clientY,
+      e.shiftKey
+    )
+    e.preventDefault();
+    return false;
+  }
 
 
   /**
@@ -233,8 +252,9 @@ class Wysiwyg {
    * @param {Element} target
    * @param {number} x
    * @param {number} y
+   * @param {boolean} isShift
    */
-  onMouseDown(target, x, y) {
+  onMouseDown(target, x, y, isShift) {
     this.isDown = true;
   }
 
@@ -244,8 +264,9 @@ class Wysiwyg {
    * @param {Element} target
    * @param {number} x
    * @param {number} y
+   * @param {boolean} isShift
    */
-  onMouseMove(target, x, y) {
+  onMouseMove(target, x, y, isShift) {
     if (this.selectionMode) {
       if (this.isDown) {
         if (!this.isDragging) {
@@ -254,7 +275,7 @@ class Wysiwyg {
         }
       }
       else {
-        var candidates = this.doc.querySelectorAll('.rsz-select-candidate');
+        var candidates = this.container.querySelectorAll('.rsz-select-candidate');
         for (let idx=0; idx<candidates.length; idx++) {
           candidates[idx].classList.remove('rsz-select-candidate');
         }
@@ -304,7 +325,7 @@ class Wysiwyg {
    */
   getSelected() {
     let selected = [];
-    let nodeList = this.doc.querySelectorAll('.rsz-selected');
+    let nodeList = this.container.querySelectorAll('.rsz-selected');
     for (let idx=0; idx<nodeList.length; idx++) {
       let element = nodeList[idx];
       selected.push(element);

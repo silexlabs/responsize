@@ -34,7 +34,7 @@ class App {
     /**
      * @type {Wysiwyg}
      */
-    this.wysiwyg = new Wysiwyg(element.querySelector('#stage'));
+    this.wysiwyg = new Wysiwyg();
 
 
     /**
@@ -58,6 +58,7 @@ class App {
     this.wysiwyg.onSelect = () => this.toolbar.setSelection(this.wysiwyg.getSelected());
 
     // init
+    this.wysiwyg.setSelectionMode(true);
     this.toolbar.setDevice(Device.desktop);
   }
 
@@ -84,11 +85,10 @@ class App {
    * @param {Object} blob
    */
   onOpen(blob) {
+    console.log('onOpen', blob);
     this.stage.setUrl(blob.url).then((doc) => {
-      this.wysiwyg.init(doc);
-      this.wysiwyg.setSelectionMode(true);
-      this.responsizer.init(doc);
-      this.toolbar.init(doc);
+      this.wysiwyg.setContainer(doc.body);
+      this.toolbar.setSelection([]);
     });
   }
 }
