@@ -53,7 +53,7 @@ stage.setUrl('http://www.silexlabs.org').then(function(doc){
 stage.setSize(1920, 1024);
 
 // add WYSIWYG feature (optional)
-var wysiwyg = new Wysiwyg(element.querySelector('#stage'));
+var wysiwyg = new Wysiwyg();
 
 // activate the mode where the user clicks are used to select elements
 wysiwyg.setSelectionMode(true);
