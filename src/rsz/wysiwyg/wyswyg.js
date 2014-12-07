@@ -106,14 +106,15 @@ class Wysiwyg {
         min-width: 20px !important;\
         min-height: 20px !important;\
         opacity: 1 !important;\
+        box-shadow: 0px 0px 2px rgba(51, 51, 51, 0.2);\
+        cursor: pointer;\
       }\
       .rsz-dragging {\
       }\
       .rsz-selected {\
-        border: 1px solid red !important;\
+        box-shadow: 0 0 4px #333333;\
       }\
       .rsz-select-candidate {\
-        border: 1px solid orange !important;\
       }\
     ';
     this.container.appendChild(styles);
