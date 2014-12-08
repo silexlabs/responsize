@@ -47,6 +47,30 @@ class Wysiwyg {
 
 
     /**
+     * callback to be notified when an element is about to be selected
+     * the callback can return true to confirm or false to prevent it
+     * @type {function(Element): boolean|null}
+     */
+    this.onBeforeSelect = null;
+
+
+    /**
+     * callback to be notified when an element is about to be dragged
+     * the callback can return true to confirm or false to prevent it
+     * @type {function(Element): boolean|null}
+     */
+    this.onBeforeDragged = null;
+
+
+    /**
+     * callback to be notified when an element is about to be dropped
+     * the callback can return true to confirm or false to prevent it
+     * @type {function(Element, Element): boolean|null}
+     */
+    this.onBeforeDropped = null;
+
+
+    /**
      * binded reference to use to attach / detach to events
      */
     this.onMouseDownBinded = this.onMouseDownCallback.bind(this);
@@ -62,14 +86,6 @@ class Wysiwyg {
      * binded reference to use to attach / detach to events
      */
     this.onMouseMoveBinded = this.onMouseMoveCallback.bind(this);
-
-
-    /**
-     * callback to be notified when an element is about to be selected
-     * the callback can return true to confirm selection or false to prevent it
-     * @type {function(Element): boolean|null}
-     */
-    this.onBeforeSelect = null;
   }
 
 
@@ -154,6 +170,7 @@ class Wysiwyg {
         cursor: pointer;\
       }\
       .rsz-dragging {\
+        position: absolute !important;\
       }\
       .rsz-selected {\
         box-shadow: 0 0 4px #333333;\
@@ -197,26 +214,6 @@ class Wysiwyg {
       best = /** @type {Element} */ (best.parentNode);
     }
     return best || target;
-  }
-
-
-  /**
-   * get the next sibling for the element
-   * @param {Element} target
-   * @return {Element|null}
-   */
-  getNextSibling(target) {
-    return this.getSibling(target, true);
-  }
-
-
-  /**
-   * get the previous sibling for the element
-   * @param {Element} target
-   * @return {Element|null}
-   */
-  getPreviousSibling(target) {
-    return this.getSibling(target, false);
   }
 
 
@@ -418,34 +415,6 @@ class Wysiwyg {
     if(this.onSelect) {
       this.onSelect();
     }
-  }
-
-
-  /**
-   * move up the selected elements in the Dom
-   * FIXME: will not handle multi selection properly like this
-   */
-  moveUp() {
-    this.getSelected().forEach((element) => {
-      let sibling = this.getNextSibling(element);
-      if(sibling) {
-        element.parentNode.insertBefore(element, sibling);
-      }
-    });
-  }
-
-
-  /**
-   * move down the selected elements in the Dom
-   * FIXME: will not handle multi selection properly like this
-   */
-  moveDown() {
-    this.getSelected().forEach((element) => {
-      let sibling = this.getPreviousSibling(element);
-      if(sibling) {
-        element.parentNode.insertBefore(sibling, element);
-      }
-    });
   }
 }
 

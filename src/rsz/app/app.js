@@ -52,8 +52,6 @@ class App {
     // bind components together
     this.toolbar.onSize = (w, h) => this.stage.setSize(w, h);
     this.toolbar.onOpenFile = () => this.fileService.open().then((blob) => this.onOpen(blob));
-    this.toolbar.onMoveDown = () => this.wysiwyg.moveDown();
-    this.toolbar.onMoveUp = () => this.wysiwyg.moveUp();
     this.wysiwyg.onBeforeSelect = (element) => {return this.hasSiblings(element)};
     this.wysiwyg.onSelect = () => this.toolbar.setSelection(this.wysiwyg.getSelected());
 

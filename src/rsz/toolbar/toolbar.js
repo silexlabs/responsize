@@ -91,20 +91,6 @@ class Toolbar {
 
     /**
      * callback
-     * @type {function()|null}
-     */
-    this.onMoveUp = null;
-
-
-    /**
-     * callback
-     * @type {function()|null}
-     */
-    this.onMoveDown = null;
-
-
-    /**
-     * callback
      * @type {function(number, number)|null}
      */
     this.onSize = null;
@@ -112,12 +98,6 @@ class Toolbar {
 
     // handle click
     this.element.addEventListener('click', (e) => this.onClick(e));
-
-    // handle move buttons
-    var up = this.element.querySelector('.move-element .up');
-    up.addEventListener('click', () => {if(this.onMoveUp) this.onMoveUp()});
-    var down = this.element.querySelector('.move-element .down');
-    down.addEventListener('click', () => {if(this.onMoveDown) this.onMoveDown()});
   }
 
 
