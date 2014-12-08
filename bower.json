@@ -6,8 +6,8 @@
   ],
   "description": "Responsize is the tool to make any website responsive, quickly and efficiently.",
   "main": [
-    "dist/client/responsize.js",
-    "dist/client/responsize.css"
+    "dist/responsize.js",
+    "dist/responsize.css"
   ],
   "keywords": [
     "responsive",
