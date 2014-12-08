@@ -101,6 +101,7 @@ class Stage {
   setUrl(url) {
     let promise = new Promise((resolve, reject) => {
       this.iframe.onload = () => resolve(this.iframe.contentDocument);
+      this.iframe.onerror = (e) => reject(e);
       this.iframe.src = url;
     });
     return promise;

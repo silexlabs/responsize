@@ -74,6 +74,50 @@ class Wysiwyg {
 
 
   /**
+   * callback to be notified when selection changes
+   * use getSelected() to retrive the selection
+   * @param {function()|null} onSelect
+   * @export
+   */
+  setOnSelect(onSelect) {
+    return this.onSelect = onSelect;
+  }
+
+
+  /**
+   * callback to be notified when selection changes
+   * use getSelected() to retrive the selection
+   * @return {function()|null}
+   * @export
+   */
+  getOnSelect() {
+    return this.onSelect;
+  }
+
+
+  /**
+   * callback to be notified when an element is about to be selected
+   * the callback can return true to confirm selection or false to prevent it
+   * @param {function(Element): boolean|null} onBeforeSelect
+   * @export
+   */
+  setOnBeforeSelect(onBeforeSelect) {
+    return this.onBeforeSelect = onBeforeSelect;
+  }
+
+
+  /**
+   * callback to be notified when an element is about to be selected
+   * the callback can return true to confirm selection or false to prevent it
+   * @return {function(Element): boolean|null}
+   * @export
+   */
+  getOnBeforeSelect() {
+    return this.onBeforeSelect;
+  }
+
+
+  /**
    * init the drag and drop events
    * @param {Element} element
    * @export
@@ -149,7 +193,7 @@ class Wysiwyg {
     /** @type {Element} */ 
     let best = target;
     // loop while we have no siblings
-    while(best && !this.onBeforeSelect(best)) {
+    while(best && this.onBeforeSelect && !this.onBeforeSelect(best)) {
       best = /** @type {Element} */ (best.parentNode);
     }
     return best || target;
@@ -323,6 +367,7 @@ class Wysiwyg {
   /**
    * handle selection
    * @return {Array.<Element>}
+   * @export
    */
   getSelected() {
     let selected = [];

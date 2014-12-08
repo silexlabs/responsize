@@ -3,6 +3,7 @@ goog.provide('rsz.FileService');
 
 /**
  * @class
+ * @export
  * this is a service to load and save files
  * it uses cloud explorer as a UI to do that
  */
@@ -28,6 +29,7 @@ class FileService {
    * open a file
    * returns a promise
    * @return {Promise}
+   * @export
    */
   open() {
     return new Promise((resolve, reject) => {

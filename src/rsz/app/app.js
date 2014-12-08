@@ -85,7 +85,6 @@ class App {
    * @param {Object} blob
    */
   onOpen(blob) {
-    console.log('onOpen', blob);
     this.stage.setUrl(blob.url).then((doc) => {
       this.wysiwyg.setContainer(doc.body);
       this.toolbar.setSelection([]);

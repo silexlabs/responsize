@@ -60,16 +60,16 @@ wysiwyg.setSelectionMode(true);
 
 // optional: you can provide a function
 // to determine if the element can be selected by the user
-wysiwyg.onBeforeSelect = function(element) {
+wysiwyg.setOnBeforeSelect(function(element) {
   return element.classList.has('my-selectable-css-class');
-};
+});
 
 // provide a callback in order to be notified when the user has selected an element
-wysiwyg.onSelect = function() {
+wysiwyg.setOnSelect(function() {
   // retrieve the selected elements
   var selection = wysiwyg.getSelected();
   console.log('Selected elements: ', selection);
-}
+});
 
 ```
 
@@ -87,12 +87,14 @@ Requirements
 $ npm install
 $ bower install
 $ grunt build
+$ node unifile-server.js
 ```
 
 # Develop
 
 ```
-$ grunt serve
+$ node unifile-server.js
+$ grunt watch
 ```
 
 Then open a browser at http://0.0.0.0:6969
