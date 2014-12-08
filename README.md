@@ -2,8 +2,6 @@
 
 Copyright Silex Labs 2014. Licensed under the MIT license.
 
-ResponSize is an amazing tool that enables the user to generate a responsive style sheet for a website. ResponSize can help you to have an optimal viewing experience for your website!
-
 Responsize can be used as an online tool, like the [Responsize app hosted by Silex Labs](http://app.responsize.org/). See the instructions bellow to host an instance on your servers.
 
 Responsize can be used as a library, providing app developers with the individual components used in Responsize, such as the resizeable Stage component.
@@ -98,5 +96,20 @@ $ grunt watch
 ```
 
 Then open a browser at http://0.0.0.0:6969
+
+# Philosophy
+
+Responsize has a goal: allow web designers to be more efficient at handling responsiveness.
+
+The user opens an HTML page and manage [bootstrap css classes](http://getbootstrap.com/) or [Simple Grid ones](https://github.com/ThisIsDallas/Simple-Grid] for example. And also hides or shows elements depending on the window size, or goup them into a [hamburger menu](http://www.designfloat.com/blog/2013/09/09/hamburger-menu-prominent-ui-evolution/).
+
+> ResponSize is an amazing tool that enables the user to generate a responsive style sheet for a website. ResponSize can help you to have an optimal viewing experience for your website!
+
+Unlike [bootstrap builders](http://bootstrapbay.com/blog/bootstrap-editors/), Responsize does not let the user add elements or edit content. But it goes along with other free tools:
+
+* [silex](http://www.silex.me): edit design
+* [backnode](http://backnode.io): edit content
+* [responsize](http://responsize.org): handle responsiveness
+
 
 
