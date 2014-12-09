@@ -3,7 +3,7 @@ goog.provide('rsz.Stage');
 /**
  * Stage class handles the website in the iframe
  * @class
- * @export
+ * @export rsz.Stage
  */
 class Stage {
   /**
@@ -46,7 +46,6 @@ class Stage {
    * @export
    */
   setSize(w, h) {
-    console.log('setSize', w, h);
     // store the new size
     this.width = w;
     this.height = h;
@@ -71,7 +70,6 @@ class Stage {
       w: this.element.offsetWidth,
       h: this.element.offsetHeight
     };
-    console.log('redraw', containerSize, this.iframe);
     let scale = {
       x: containerSize.w / this.width,
       y: containerSize.h / this.height
@@ -103,6 +101,25 @@ class Stage {
       this.iframe.onload = () => resolve(this.iframe.contentDocument);
       this.iframe.onerror = (e) => reject(e);
       this.iframe.src = url;
+    });
+    return promise;
+  }
+
+
+  /**
+   * @param {string} html
+   * @return {Promise}
+   * @export
+   */
+  setHtml(html) {
+    let promise = new Promise((resolve, reject) => {
+      this.iframe.onload = () => {
+        this.iframe.onload = resolve(this.iframe.contentDocument);
+        this.iframe.src = '';
+        this.iframe.contentDocument.write(html);
+      };
+      this.iframe.onerror = (e) => reject(e);
+      this.iframe.src = 'about:blank';
     });
     return promise;
   }
