@@ -15,8 +15,9 @@ module.exports = function(grunt) {
 
   // tasks
   grunt.registerTask('default', ['build']);
-  grunt.registerTask('build', ['bower', 'jade', 'sass', 'closureCompiler']);
+  grunt.registerTask('build', ['bower', 'jade', 'sass', 'closureCompiler', 'append-sourcemapping']);
   grunt.registerTask('serve', ['connect', 'watch']);
+  grunt.loadNpmTasks('grunt-append-sourcemapping');
 
   grunt.initConfig({
     sass: {
@@ -61,13 +62,20 @@ module.exports = function(grunt) {
         }
       }
     },
+    "append-sourcemapping": {
+      main: {
+        files: {
+          "dist/responsize.js": "responsize.js.map"
+        }
+      }
+    },
     watch: {
       options: {
         livereload: true
       },
       js: {
         files: ['src/**/*.js', 'build/externs.js', 'Gruntfile.js'],
-        tasks: ['closureCompiler']
+        tasks: ['closureCompiler', 'append-sourcemapping']
       },
       html: {
         files: ['src/**/*.jade', 'Gruntfile.js'],
