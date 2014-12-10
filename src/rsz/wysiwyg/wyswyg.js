@@ -178,26 +178,6 @@ class Wysiwyg {
 
     // reset mouse
     this.isDown = false;
-    // insert styles
-    let styles = document.createElement('style');
-    styles.innerHTML = '\
-      .rsz-select-mode * {\
-        min-width: 20px !important;\
-        min-height: 20px !important;\
-        opacity: 1 !important;\
-        box-shadow: 0px 0px 2px rgba(51, 51, 51, 0.2);\
-        cursor: pointer;\
-      }\
-      .rsz-dragging {\
-        position: absolute !important;\
-      }\
-      .rsz-selected {\
-        box-shadow: 0 0 4px #333333;\
-      }\
-      .rsz-select-candidate {\
-      }\
-    ';
-    this.container.appendChild(styles);
   }
 
 
