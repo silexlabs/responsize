@@ -86,6 +86,12 @@ class Wysiwyg {
      * binded reference to use to attach / detach to events
      */
     this.onMouseMoveBinded = this.onMouseMoveCallback.bind(this);
+
+
+    /**
+     * prevent click
+     */
+    this.preventClickBinded = this.onMouseUpCallback.bind(this);
   }
 
 
@@ -144,6 +150,12 @@ class Wysiwyg {
       this.container.removeEventListener('mousedown', this.onMouseDownBinded);
       this.container.removeEventListener('mouseup', this.onMouseUpBinded);
       this.container.removeEventListener('mousemove', this.onMouseMoveBinded);
+      // prevent links
+      let doc = element.ownerDocument;
+      let anchors = doc.getElementsByTagName("a");
+      for (let i = 0; i < anchors.length ; i++) {
+        anchors[i].removeEventListener("click", this.preventClickBinded);
+      }
     }
 
     // store for later use
@@ -153,9 +165,16 @@ class Wysiwyg {
     this.setSelectionMode(this.selectionMode);
 
     // add the mouse events
-    this.container.addEventListener('mouseup', this.onMouseUpBinded);
+    this.container.addEventListener('mouseup', this.onMouseUpBinded, true);
     this.container.addEventListener('mousedown', this.onMouseDownBinded);
     this.container.addEventListener('mousemove', this.onMouseMoveBinded);
+
+    // prevent links
+    let doc = element.ownerDocument;
+    let anchors = doc.getElementsByTagName("a");
+    for (let i = 0; i < anchors.length ; i++) {
+      anchors[i].addEventListener("click", this.preventClickBinded);
+    }
 
     // reset mouse
     this.isDown = false;
@@ -355,7 +374,7 @@ class Wysiwyg {
         this.getSelected().forEach((element) => {
           if (element != target) this.unSelect(element)
         });
-        this.toggleSelect(target);
+        this.select(target);
       }
     }
   }
