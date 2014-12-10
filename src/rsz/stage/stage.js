@@ -34,6 +34,12 @@ class Stage {
      */
     this.height= 1;
 
+    /**
+     * @type {boolean}
+     */
+    this.autoSize = true;
+
+
     // init
     window.addEventListener('resize', this.redraw.bind(this));
   }
@@ -46,11 +52,44 @@ class Stage {
    * @export
    */
   setSize(w, h) {
+    // manual size
+    this.autoSize = false;
+
     // store the new size
     this.width = w;
     this.height = h;
     // refresh display
     this.redraw();
+  }
+
+
+  /**
+   * compute content size
+   * @return {{w: number, h: number}}
+   * @export
+   */
+  getContentSize() {
+    let box = {left: null, right: null, top: null, bottom: null};
+    let elements = this.iframe.contentDocument.querySelectorAll('*');
+    for (let idx = 0; idx<elements.length; idx++) {
+      let element = elements[idx];
+      if (box.left === null || element.offsetLeft < box.left) {
+        box.left = element.offsetLeft;
+      }
+      if (box.top === null || element.offsetTop < box.top) {
+        box.top = element.offsetTop;
+      }
+      if (element.offsetLeft + element.offsetWidth > box.right) {
+        box.right = element.offsetLeft + element.offsetWidth;
+      }
+      if (element.offsetTop + element.offsetHeight > box.bottom) {
+        box.bottom = element.offsetTop + element.offsetHeight;
+      }
+    }
+    return {
+      w: box.right - box.left,
+      h: box.bottom - box.top
+    };
   }
 
 
@@ -61,6 +100,13 @@ class Stage {
    * @export
    */
   redraw() {
+    // size to content
+    if(this.autoSize) {
+      let size = this.getContentSize();
+      this.width = size.w;
+      this.height = size.h;
+    }
+
     // apply the real size
     this.iframe.style.width = this.width + 'px';
     this.iframe.style.height = this.height + 'px';
@@ -101,6 +147,7 @@ class Stage {
       this.iframe.onload = () => resolve(this.iframe.contentDocument);
       this.iframe.onerror = (e) => reject(e);
       this.iframe.src = url;
+      this.redraw();
     });
     return promise;
   }
@@ -117,6 +164,7 @@ class Stage {
         this.iframe.onload = resolve(this.iframe.contentDocument);
         this.iframe.src = '';
         this.iframe.contentDocument.write(html);
+        this.redraw();
       };
       this.iframe.onerror = (e) => reject(e);
       this.iframe.src = 'about:blank';
