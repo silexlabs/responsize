@@ -53,12 +53,6 @@ class Toolbar {
     /**
      * @type {Element}
      */
-    this.moveButtonsElement = this.element.querySelector('.move-element');
-    
-
-    /**
-     * @type {Element}
-     */
     this.openElement = this.element.querySelector('.open');
     
 
@@ -182,11 +176,6 @@ class Toolbar {
    * @export
    */
   redraw() {
-    if (this.selection && this.selection.length>0) {
-      this.moveButtonsElement.classList.remove('disabled');
-    }
-    else {
-      this.moveButtonsElement.classList.add('disabled');
-    }
+    // if (this.selection && this.selection.length>0) {
   }
 }
