@@ -32,6 +32,14 @@ class Wysiwyg {
 
 
     /**
+     * css style sheet url, which will be loaded in the iframe (and reloaded after setContainer)
+     * This style sheet should handle the css classes of Responsize e.g. .rsz-selected
+     * @type {string|null} url
+     */
+    this.styleUrl = null;
+
+
+    /**
      * @type {Element|null}
      * the current container
      */
@@ -51,23 +59,7 @@ class Wysiwyg {
      * the callback can return true to confirm or false to prevent it
      * @type {function(Element): boolean|null}
      */
-    this.onBeforeSelect = null;
-
-
-    /**
-     * callback to be notified when an element is about to be dragged
-     * the callback can return true to confirm or false to prevent it
-     * @type {function(Element): boolean|null}
-     */
-    this.onBeforeDragged = null;
-
-
-    /**
-     * callback to be notified when an element is about to be dropped
-     * the callback can return true to confirm or false to prevent it
-     * @type {function(Element, Element): boolean|null}
-     */
-    this.onBeforeDropped = null;
+    this.selectFilter = null;
 
 
     /**
@@ -89,7 +81,7 @@ class Wysiwyg {
 
 
     /**
-     * prevent click
+     * prevent click on links
      */
     this.preventClickBinded = this.onMouseUpCallback.bind(this);
   }
@@ -120,11 +112,11 @@ class Wysiwyg {
   /**
    * callback to be notified when an element is about to be selected
    * the callback can return true to confirm selection or false to prevent it
-   * @param {function(Element): boolean|null} onBeforeSelect
+   * @param {function(Element): boolean|null} selectFilter
    * @export
    */
-  setOnBeforeSelect(onBeforeSelect) {
-    return this.onBeforeSelect = onBeforeSelect;
+  setSelectFilter(selectFilter) {
+    return this.selectFilter = selectFilter;
   }
 
 
@@ -134,8 +126,58 @@ class Wysiwyg {
    * @return {function(Element): boolean|null}
    * @export
    */
-  getOnBeforeSelect() {
-    return this.onBeforeSelect;
+  getSelectFilter() {
+    return this.selectFilter;
+  }
+
+
+  /**
+   * Set/get the css style sheet url, which will be loaded in the iframe (and reloaded after setContainer)
+   * This style sheet should handle the css classes of Responsize e.g. .rsz-selected
+   * @param {string|null} url
+   * @export
+   */
+  setStyleUrl(url) {
+    // store the value
+    this.styleUrl = url;
+    // load the style sheet in the iframe
+    if (this.container) {
+      var tag = this.container.querySelector('#rsz-stylesheet');
+      if(!url) {
+        if (tag) {
+          this.container.removeChild(tag);
+        }
+      }
+      else {
+        if(!tag) {
+          // create a new tag if needed
+          tag = document.createElement('link');
+          tag.setAttribute('rel', 'stylesheet');
+          tag.setAttribute('type', 'text/css');
+          tag.setAttribute('id', 'rsz-stylesheet');
+          // insert the tag
+          if(this.container.firstChild) {
+            this.container.insertBefore(tag, this.container.firstChild);
+          }
+          else {
+            this.container.appendChild(tag);
+          }
+        }
+        // update the href attribute
+        tag.setAttribute('href', url);
+      }
+    }
+  }
+
+
+  /**
+   * Set/get the css style sheet url, which will be loaded in the iframe (and reloaded after setContainer)
+   * This style sheet should handle the css classes of Responsize e.g. .rsz-selected
+   * @return {string|null} url of the current style sheet
+   * @export
+   */
+  getStyleUrl() {
+    return this.styleUrl;
   }
 
 
@@ -178,6 +220,9 @@ class Wysiwyg {
 
     // reset mouse
     this.isDown = false;
+
+    // load style for the new container
+    this.setStyleUrl(this.styleUrl);
   }
 
 
@@ -198,9 +243,10 @@ class Wysiwyg {
     }
   }
 
+
   /**
    * get the best element to be selected
-   * i.e. the first parent with siblings
+   * i.e. the elements under the cursor, with the filter applied
    * @param {Element} target
    * @return {Element}
    * @export
@@ -209,7 +255,7 @@ class Wysiwyg {
     /** @type {Element} */ 
     let best = target;
     // loop while we have no siblings
-    while(best && this.onBeforeSelect && !this.onBeforeSelect(best)) {
+    while(best && this.selectFilter && !this.selectFilter(best)) {
       best = /** @type {Element} */ (best.parentNode);
     }
     return best || target;
@@ -316,10 +362,16 @@ class Wysiwyg {
         }
       }
       else {
+        // reset all candidates
         var candidates = this.container.querySelectorAll('.rsz-select-candidate');
         for (let idx=0; idx<candidates.length; idx++) {
           candidates[idx].classList.remove('rsz-select-candidate');
         }
+        
+        // reset the container
+        this.container.classList.remove('rsz-select-candidate');
+        
+        // new candidate
         target.classList.add('rsz-select-candidate');
       }
     }
@@ -342,18 +394,13 @@ class Wysiwyg {
         this.isDragging = false;
       }
       else {
-        /*
         // handle multiple selection
         if (!isShift) {
-          this.getSelected().forEach((element) => this.unSelect(element));
+          this.getSelected().forEach((element) => {
+            if (element != target) this.unSelect(element, false)
+          });
         }
-        // select / unselect the element
-        this.toggleSelect(target);
-        */
-        // no multiple selection for now
-        this.getSelected().forEach((element) => {
-          if (element != target) this.unSelect(element)
-        });
+        // select the element
         this.select(target);
       }
     }
@@ -366,12 +413,20 @@ class Wysiwyg {
    * @export
    */
   getSelected() {
-    let selected = [];
+    // retrieve the selected elements
     let nodeList = this.container.querySelectorAll('.rsz-selected');
+    
+    // convert to array
+    let selected = [];
     for (let idx=0; idx<nodeList.length; idx++) {
       let element = nodeList[idx];
       selected.push(element);
     }
+    // handle the container
+    if(this.container.classList.contains('.rsz-selected')) {
+      selected.push(this.container);
+    }
+
     return selected;
   }
 
@@ -386,32 +441,42 @@ class Wysiwyg {
 
   /**
    * handle selection
+   * @param {Element} element
+   * @param {?boolean=} notify (defaults to true)
    */
-  select(element) {
-    element.classList.add('rsz-selected');
-    if(this.onSelect) {
-      this.onSelect();
+  select(element, notify) {
+    if(!element.classList.contains('rsz-selected')) {
+      element.classList.add('rsz-selected');
+      if(notify !== false && this.onSelect) {
+        this.onSelect();
+      }
     }
   }
 
 
   /**
    * handle selection
+   * @param {Element} element
+   * @param {?boolean=} notify (defaults to true)
    */
-  unSelect(element) {
-    element.classList.remove('rsz-selected');
-    if(this.onSelect) {
-      this.onSelect();
+  unSelect(element, notify) {
+    if(element.classList.contains('rsz-selected')) {
+      element.classList.remove('rsz-selected');
+      if(notify !== false && this.onSelect) {
+        this.onSelect();
+      }
     }
 }
 
 
   /**
    * handle selection
+   * @param {Element} element
+   * @param {?boolean=} notify (defaults to true)
    */
-  toggleSelect(element) {
+  toggleSelect(element, notify) {
     element.classList.toggle('rsz-selected');
-    if(this.onSelect) {
+    if(notify !== false && this.onSelect) {
       this.onSelect();
     }
   }

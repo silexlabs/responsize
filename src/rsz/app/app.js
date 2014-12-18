@@ -52,11 +52,12 @@ class App {
     // bind components together
     this.toolbar.onSize = (w, h) => this.stage.setSize(w, h);
     this.toolbar.onOpenFile = () => this.fileService.open().then((blob) => this.onOpen(blob));
-    this.wysiwyg.onBeforeSelect = (element) => {return this.hasSiblings(element)};
+    this.wysiwyg.selectFilter = (element) => {return this.hasSiblings(element)};
     this.wysiwyg.onSelect = () => this.toolbar.setSelection(this.wysiwyg.getSelected());
 
     // init
     this.wysiwyg.setSelectionMode(true);
+    this.wysiwyg.setStyleUrl(window.location.href + '/iframe.css');
     this.toolbar.setDevice(Device.desktop);
   }
 

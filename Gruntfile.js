@@ -26,7 +26,8 @@ module.exports = function(grunt) {
       },
       dist: {
         files: {
-          'dist/responsize.css': 'src/index.scss'
+          'dist/responsize.css': 'src/index.scss',
+          'dist/iframe.css': 'src/iframe.scss'
         }
       }
     },

@@ -58,12 +58,15 @@ stage.setSize(1920, 1024);
 // add WYSIWYG feature (optional)
 var wysiwyg = new Wysiwyg();
 
+// skin the selection marker and more
+wysiwyg.setStyleUrl(window.location.href + '/css/wysiwyg-skin.css');
+
 // activate the mode where the user clicks are used to select elements
 wysiwyg.setSelectionMode(true);
 
 // optional: you can provide a function
 // to determine if the element can be selected by the user
-wysiwyg.setOnBeforeSelect(function(element) {
+wysiwyg.setSelectFilter(function(element) {
   return element.classList.has('my-selectable-css-class');
 });
 
