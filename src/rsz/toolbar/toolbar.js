@@ -119,7 +119,7 @@ class Toolbar {
       }
     }
     if(element.classList.contains('save')) {
-      this.saveElement.classList.toggle('off');
+      this.setDirty(false);
       if (this.onSaveFile) {
         this.onSaveFile();
       }
