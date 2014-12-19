@@ -57,7 +57,7 @@ class App {
 
     // init
     this.wysiwyg.setSelectionMode(true);
-    this.wysiwyg.setStyleUrl(window.location.href + '/iframe.css');
+    this.wysiwyg.setStyleUrl(window.location.href + 'iframe.css');
     this.toolbar.setDevice(Device.desktop);
   }
 

@@ -6,13 +6,12 @@ Stage, to be added
 
 Wysiwyg to be added
 
- unselect when escape key or click on the container or outside
+* unselect when escape key or click on the container or outside
 * handle focus (invisible text field)?
 * handle mouse move and mouse up over the UI / outside the iframe
 * add / remove elements
 * double click
-* filters: select, drag, drop, resize
-* styles: selected, dragged, dropCandidate, selectCandidate
+* drag, drop, resize
 * dragDropMode: positioned/absolute
 * cleanup dom
 

@@ -1,5 +1,7 @@
 goog.provide('rsz.Wysiwyg');
 
+goog.require('rsz.wysiwyg.RszSelection');
+
 /**
  * This class gives the user the ability to drag and drop the elements on the stage
  * @class
@@ -11,24 +13,19 @@ class Wysiwyg {
    */
   constructor() {
     /**
+     * callback to be notified when selection changes
+     * use getSelected() to retrive the selection
+     * alternative to the use of setOnSelected
+     * @type {function()|null}
+     */
+    this.onSelect = null;
+
+
+    /**
      * selection mode on/off
      * @type {boolean}
      */
     this.selectionMode = false;
-
-
-    /**
-     * @type {boolean}
-     * true if mouse is down
-     */
-    this.isDown = false;
-
-
-    /**
-     * @type {boolean}
-     * true if the user is dragging an element
-     */
-    this.isDragging = false;
 
 
     /**
@@ -46,15 +43,7 @@ class Wysiwyg {
     this.container = null;
 
 
-    /**
-     * callback to be notified when selection changes
-     * use getSelected() to retrive the selection
-     * @type {function()|null}
-     */
-    this.onSelect = null;
-
-
-    /**
+   /**
      * callback to be notified when an element is about to be selected
      * the callback can return true to confirm or false to prevent it
      * @type {function(Element): boolean|null}
@@ -84,6 +73,13 @@ class Wysiwyg {
      * prevent click on links
      */
     this.preventClickBinded = this.onMouseUpCallback.bind(this);
+
+  
+    /**
+     * selection component
+     * @type {RszSelection|null}
+     */
+    this.selection = new RszSelection();
   }
 
 
@@ -94,7 +90,7 @@ class Wysiwyg {
    * @export
    */
   setOnSelect(onSelect) {
-    return this.onSelect = onSelect;
+    return this.selection.onSelect = onSelect;
   }
 
 
@@ -105,7 +101,7 @@ class Wysiwyg {
    * @export
    */
   getOnSelect() {
-    return this.onSelect;
+    return this.selection.onSelect;
   }
 
 
@@ -200,6 +196,9 @@ class Wysiwyg {
       }
     }
 
+    // reset selection
+    this.selection.reset(this.container);
+
     // store for later use
     this.container = element;
 
@@ -218,9 +217,6 @@ class Wysiwyg {
       anchors[i].addEventListener("click", this.preventClickBinded);
     }
 
-    // reset mouse
-    this.isDown = false;
-
     // load style for the new container
     this.setStyleUrl(this.styleUrl);
   }
@@ -233,14 +229,6 @@ class Wysiwyg {
    */
   setSelectionMode(activated) {
     this.selectionMode = activated;
-    if(this.container) {
-      if(activated) {
-        this.container.classList.add('rsz-select-mode');
-      }
-      else {
-        this.container.classList.remove('rsz-select-mode');
-      }
-    }
   }
 
 
@@ -291,119 +279,68 @@ class Wysiwyg {
 
   /**
    * callback for mouse events
+   * @param {Event} e
+   * @return {boolean}
    */
   onMouseUpCallback(e) {
-    this.onMouseUp(
-      this.getBestElement(/** @type {Element} */ (e.target)),
-      e.clientX,
-      e.clientY,
-      e.shiftKey
-    );
-    e.preventDefault();
-    return false;
+    if (this.selectionMode && this.container) {
+      var selectionChanged = this.selection.onMouseUp(
+        this.container,
+        this.getBestElement(/** @type {Element} */ (e.target)),
+        e.clientX,
+        e.clientY,
+        e.shiftKey
+      );
+      if (selectionChanged && this.onSelect) {
+        this.onSelect();
+      }
+      // prevent default behaviour
+      e.preventDefault();
+      return false;
+    }
+    return true;
   }
 
 
   /**
    * callback for mouse events
+   * @param {Event} e
+   * @return {boolean}
    */
   onMouseDownCallback(e) {
-    this.onMouseDown(
-      this.getBestElement(/** @type {Element} */ (e.target)),
-      e.clientX,
-      e.clientY,
-      e.shiftKey
-    )
-    e.preventDefault();
-    return false;
+    if (this.selectionMode && this.container) {
+      this.selection.onMouseDown(
+        this.container,
+        this.getBestElement(/** @type {Element} */ (e.target)),
+        e.clientX,
+        e.clientY,
+        e.shiftKey
+      )
+      e.preventDefault();
+      return false;
+    }
+    return true;
   }
 
 
   /**
    * callback for mouse events
+   * @param {Event} e
+   * @return {boolean}
    */
   onMouseMoveCallback(e) {
-    this.onMouseMove(
-      this.getBestElement(/** @type {Element} */ (e.target)),
-      e.clientX,
-      e.clientY,
-      e.shiftKey
-    )
-    e.preventDefault();
-    return false;
-  }
-
-
-  /**
-   * memorise mouse state
-   * @param {Element} target
-   * @param {number} x
-   * @param {number} y
-   * @param {boolean} isShift
-   */
-  onMouseDown(target, x, y, isShift) {
-    this.isDown = true;
-  }
-
-
-  /**
-   * start the process of drag
-   * @param {Element} target
-   * @param {number} x
-   * @param {number} y
-   * @param {boolean} isShift
-   */
-  onMouseMove(target, x, y, isShift) {
-    if (this.selectionMode) {
-      if (this.isDown) {
-        if (!this.isDragging) {
-          // start dragging
-          this.isDragging = true;
-        }
-      }
-      else {
-        // reset all candidates
-        var candidates = this.container.querySelectorAll('.rsz-select-candidate');
-        for (let idx=0; idx<candidates.length; idx++) {
-          candidates[idx].classList.remove('rsz-select-candidate');
-        }
-        
-        // reset the container
-        this.container.classList.remove('rsz-select-candidate');
-        
-        // new candidate
-        target.classList.add('rsz-select-candidate');
-      }
+    if (this.selectionMode && this.container) {
+      this.selection.onMouseMove(
+        this.container,
+        this.getBestElement(/** @type {Element} */ (e.target)),
+        e.clientX,
+        e.clientY,
+        e.shiftKey
+      )
+      e.preventDefault();
+      return false;
     }
-  }
-
-
-  /**
-   * ends the process of drag, drop the target
-   * handle selection too
-   * @param {Element} target
-   * @param {number} x
-   * @param {number} y
-   * @param {boolean} isShift
-   */
-  onMouseUp(target, x, y, isShift) {
-    this.isDown = false;
-    if (this.selectionMode) {
-      if (this.isDragging) {
-        // drop the element
-        this.isDragging = false;
-      }
-      else {
-        // handle multiple selection
-        if (!isShift) {
-          this.getSelected().forEach((element) => {
-            if (element != target) this.unSelect(element, false)
-          });
-        }
-        // select the element
-        this.select(target);
-      }
-    }
+    return true;
   }
 
 
@@ -413,72 +350,7 @@ class Wysiwyg {
    * @export
    */
   getSelected() {
-    // retrieve the selected elements
-    let nodeList = this.container.querySelectorAll('.rsz-selected');
-    
-    // convert to array
-    let selected = [];
-    for (let idx=0; idx<nodeList.length; idx++) {
-      let element = nodeList[idx];
-      selected.push(element);
-    }
-    // handle the container
-    if(this.container.classList.contains('.rsz-selected')) {
-      selected.push(this.container);
-    }
-
-    return selected;
-  }
-
-
-   /**
-   * handle selection
-   */
-  isSelected(element) {
-    return element.classList.contains('.rsz-selected');
-  }
-
-
-  /**
-   * handle selection
-   * @param {Element} element
-   * @param {?boolean=} notify (defaults to true)
-   */
-  select(element, notify) {
-    if(!element.classList.contains('rsz-selected')) {
-      element.classList.add('rsz-selected');
-      if(notify !== false && this.onSelect) {
-        this.onSelect();
-      }
-    }
-  }
-
-
-  /**
-   * handle selection
-   * @param {Element} element
-   * @param {?boolean=} notify (defaults to true)
-   */
-  unSelect(element, notify) {
-    if(element.classList.contains('rsz-selected')) {
-      element.classList.remove('rsz-selected');
-      if(notify !== false && this.onSelect) {
-        this.onSelect();
-      }
-    }
-}
-
-
-  /**
-   * handle selection
-   * @param {Element} element
-   * @param {?boolean=} notify (defaults to true)
-   */
-  toggleSelect(element, notify) {
-    element.classList.toggle('rsz-selected');
-    if(notify !== false && this.onSelect) {
-      this.onSelect();
-    }
+    return this.selection.getSelected(this.container);
   }
 }
 
