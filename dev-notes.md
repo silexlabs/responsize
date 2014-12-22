@@ -1,4 +1,35 @@
 
+## Archi
+
+### Editable
+
+Helper class used to combine the Stage class with other classes such as Selection, Drag and Resize.
+
+* methods to enable a functionality: enable/disableSelection(selectionFilter), enable/disableDrag(dropFilter), enable/disableResize()
+* events or callbacks: onSelection, onDrag, onDrop, onResize
+* other methods:
+  * set/getTempStyle(url)
+  * set/getTempScript(url)
+  * set/getHtml
+
+### Stage
+
+Display a website in an iframe and apply CSS transforms to display it at a given viewport's size, in a given container's size.
+
+* set/getHtml
+* set/getViewportSize
+* set/getContainer (for size)
+
+### Selection
+
+* addTempTag = add tags in the iframe which will be removed before returnin the html in getHtml and added each time you call setHtml
+* onSelect
+* cleanup(element)
+
+## en cours
+
+* add/removeTempTag dans stage au lieu de Wysiwyg::setStyleurl
+* dom cleanup pour set/getHml
 
 Stage, to be added
 

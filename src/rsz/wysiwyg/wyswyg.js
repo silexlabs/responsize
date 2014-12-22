@@ -29,18 +29,10 @@ class Wysiwyg {
 
 
     /**
-     * css style sheet url, which will be loaded in the iframe (and reloaded after setContainer)
-     * This style sheet should handle the css classes of Responsize e.g. .rsz-selected
-     * @type {string|null} url
+     * @type {HTMLDocument|null}
+     * the current document
      */
-    this.styleUrl = null;
-
-
-    /**
-     * @type {Element|null}
-     * the current container
-     */
-    this.container = null;
+    this.document = null;
 
 
    /**
@@ -80,6 +72,13 @@ class Wysiwyg {
      * @type {RszSelection|null}
      */
     this.selection = new RszSelection();
+
+
+    /**
+     * Dm component
+     * @type {RszDom}
+     */
+    this.dom = new RszDom();
   }
 
 
@@ -128,97 +127,59 @@ class Wysiwyg {
 
 
   /**
-   * Set/get the css style sheet url, which will be loaded in the iframe (and reloaded after setContainer)
-   * This style sheet should handle the css classes of Responsize e.g. .rsz-selected
-   * @param {string|null} url
+   * remove data needed for editing
+   * @return {string}
    * @export
    */
-  setStyleUrl(url) {
-    // store the value
-    this.styleUrl = url;
-    // load the style sheet in the iframe
-    if (this.container) {
-      var tag = this.container.querySelector('#rsz-stylesheet');
-      if(!url) {
-        if (tag) {
-          this.container.removeChild(tag);
-        }
-      }
-      else {
-        if(!tag) {
-          // create a new tag if needed
-          tag = document.createElement('link');
-          tag.setAttribute('rel', 'stylesheet');
-          tag.setAttribute('type', 'text/css');
-          tag.setAttribute('id', 'rsz-stylesheet');
-          // insert the tag
-          if(this.container.firstChild) {
-            this.container.insertBefore(tag, this.container.firstChild);
-          }
-          else {
-            this.container.appendChild(tag);
-          }
-        }
-        // update the href attribute
-        tag.setAttribute('href', url);
-      }
-    }
-  }
-
-
-  /**
-   * Set/get the css style sheet url, which will be loaded in the iframe (and reloaded after setContainer)
-   * This style sheet should handle the css classes of Responsize e.g. .rsz-selected
-   * @return {string|null} url of the current style sheet
-   * @export
-   */
-  getStyleUrl() {
-    return this.styleUrl;
+  getCleanHtml() {
+    var doc = this.document.documentElement.cloneNode(true);
+    this.dom.unprepare(doc);
+    return doc.outerHTML;
   }
 
 
   /**
    * init the drag and drop events
-   * @param {Element} element
+   * @param {HTMLDocument} doc
    * @export
    */
-  setContainer(element) {
+  setDocument(doc) {
     // reset the previous container
-    if (this.container) {
-      this.container.removeEventListener('mousedown', this.onMouseDownBinded);
-      this.container.removeEventListener('mouseup', this.onMouseUpBinded);
-      this.container.removeEventListener('mousemove', this.onMouseMoveBinded);
+    if (this.document) {
+      this.document.removeEventListener('mousedown', this.onMouseDownBinded);
+      this.document.removeEventListener('mouseup', this.onMouseUpBinded);
+      this.document.removeEventListener('mousemove', this.onMouseMoveBinded);
       // prevent links
-      let doc = element.ownerDocument;
-      let anchors = doc.getElementsByTagName("a");
+      let anchors = this.document.getElementsByTagName("a");
       for (let i = 0; i < anchors.length ; i++) {
         anchors[i].removeEventListener("click", this.preventClickBinded);
       }
+      // cleanup
+      this.dom.unprepare(this.document.documentElement);
     }
 
     // reset selection
-    this.selection.reset(this.container);
+    this.selection.reset(this.document);
 
     // store for later use
-    this.container = element;
+    this.document = doc;
 
     // update selection mode
     this.setSelectionMode(this.selectionMode);
 
     // add the mouse events
-    this.container.addEventListener('mouseup', this.onMouseUpBinded, true);
-    this.container.addEventListener('mousedown', this.onMouseDownBinded);
-    this.container.addEventListener('mousemove', this.onMouseMoveBinded);
+    this.document.addEventListener('mouseup', this.onMouseUpBinded, true);
+    this.document.addEventListener('mousedown', this.onMouseDownBinded);
+    this.document.addEventListener('mousemove', this.onMouseMoveBinded);
 
     // prevent links
-    let doc = element.ownerDocument;
-    let anchors = doc.getElementsByTagName("a");
+    let anchors = this.document.getElementsByTagName("a");
     for (let i = 0; i < anchors.length ; i++) {
       anchors[i].addEventListener("click", this.preventClickBinded);
     }
 
-    // load style for the new container
-    this.setStyleUrl(this.styleUrl);
+    // prepare for edit
+    this.dom.prepare(this.document.documentElement);
   }
 
 
@@ -278,14 +239,30 @@ class Wysiwyg {
 
 
   /**
+   * Add a style element to the stage
+   * This element will be added again after setHtml is called
+   * This element will be removed before getHtml returns the html
+   * @param {string} url
+   * @export
+   */
+  addTempStyle(url) {
+    var element = document.createElement('link');
+    element.setAttribute('rel', 'stylesheet');
+    element.setAttribute('type', 'text/css');
+    element.setAttribute('href', url);
+    this.dom.addTempElement(this.document, element);
+  }
+
+
+  /**
    * callback for mouse events
    * @param {Event} e
    * @return {boolean}
    */
   onMouseUpCallback(e) {
-    if (this.selectionMode && this.container) {
+    if (this.selectionMode && this.document) {
       var selectionChanged = this.selection.onMouseUp(
-        this.container,
+        this.document,
         this.getBestElement(/** @type {Element} */ (e.target)),
         e.clientX,
         e.clientY,
@@ -308,9 +285,9 @@ class Wysiwyg {
    * @return {boolean}
    */
   onMouseDownCallback(e) {
-    if (this.selectionMode && this.container) {
+    if (this.selectionMode && this.document) {
       this.selection.onMouseDown(
-        this.container,
+        this.document,
         this.getBestElement(/** @type {Element} */ (e.target)),
         e.clientX,
         e.clientY,
@@ -329,9 +306,9 @@ class Wysiwyg {
    * @return {boolean}
    */
   onMouseMoveCallback(e) {
-    if (this.selectionMode && this.container) {
+    if (this.selectionMode && this.document) {
       this.selection.onMouseMove(
-        this.container,
+        this.document,
         this.getBestElement(/** @type {Element} */ (e.target)),
         e.clientX,
         e.clientY,
@@ -350,7 +327,7 @@ class Wysiwyg {
    * @export
    */
   getSelected() {
-    return this.selection.getSelected(this.container);
+    return this.selection.getSelected(this.document);
   }
 }
 

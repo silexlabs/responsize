@@ -25,11 +25,11 @@
     "test",
     "tests"
   ],
-  "_release": "41e284dc8b",
+  "_release": "33a86a3b9f",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "41e284dc8bbb165a7f51d55840e595b954e4f16f"
+    "commit": "33a86a3b9f1414534115813c85c49106e759ded2"
   },
   "_source": "git://github.com/lexoyo/bower-cloud-explorer.git",
   "_target": "*",

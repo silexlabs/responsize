@@ -59,7 +59,7 @@ stage.setSize(1920, 1024);
 var wysiwyg = new Wysiwyg();
 
 // skin the selection marker and more
-wysiwyg.setStyleUrl(window.location.href + '/css/wysiwyg-skin.css');
+wysiwyg.addTempStyle(window.location.href + '/css/wysiwyg-skin.css');
 
 // activate the mode where the user clicks are used to select elements
 wysiwyg.setSelectionMode(true);
@@ -78,6 +78,8 @@ wysiwyg.setOnSelect(function() {
 });
 
 ```
+
+To remove the useless css classes and elements used during edition, use ```wysiwyg.getCleanHtml();```
 
 # Installation of the online tool
 

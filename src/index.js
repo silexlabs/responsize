@@ -12,7 +12,7 @@ window['initResponsizeApp'] = function initResponsizeApp() {
   // debug:
   var query = getQueryParams(document.location.search);
   if (query.url) {
-    app.onOpen({'url': query.url});
+    app.onOpen(query.url);
   }
 }
 

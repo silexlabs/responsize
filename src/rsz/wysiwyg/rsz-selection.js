@@ -34,39 +34,39 @@ class RszSelection {
 
   /**
    * reset selection
-   * @param {Element} container
+   * @param {HTMLDocument} doc 
    */
-  reset(container) {
+  reset(doc) {
      // reset mouse
     this.isDown = false;
     // selection
-    this.getSelected(container).forEach((element) => {
+    this.getSelected(doc).forEach((element) => {
       this.unSelect(element, false);
     });
   }
 
   /**
    * memorise mouse state
-   * @param {Element} container
+   * @param {HTMLDocument} doc
    * @param {Element} target
    * @param {number} x
    * @param {number} y
    * @param {boolean} isShift
    */
-  onMouseDown(container, target, x, y, isShift) {
+  onMouseDown(doc, target, x, y, isShift) {
     this.isDown = true;
   }
 
 
   /**
    * start the process of drag
-   * @param {Element} container
+   * @param {HTMLDocument} doc
    * @param {Element} target
    * @param {number} x
    * @param {number} y
    * @param {boolean} isShift
    */
-  onMouseMove(container, target, x, y, isShift) {
+  onMouseMove(doc, target, x, y, isShift) {
     if (this.isDown) {
       if (!this.isDragging) {
         // start dragging
@@ -75,13 +75,10 @@ class RszSelection {
     }
     else {
       // reset all candidates
-      var candidates = container.querySelectorAll('.rsz-select-candidate');
+      var candidates = doc.querySelectorAll('.rsz-select-candidate');
       for (let idx=0; idx<candidates.length; idx++) {
         candidates[idx].classList.remove('rsz-select-candidate');
       }
-      
-      // reset the container
-      container.classList.remove('rsz-select-candidate');
       
       // new candidate
       target.classList.add('rsz-select-candidate');
@@ -92,14 +89,14 @@ class RszSelection {
   /**
    * ends the process of drag, drop the target
    * handle selection too
-   * @param {Element} container
+   * @param {HTMLDocument} doc
    * @param {Element} target
    * @param {number} x
    * @param {number} y
    * @param {boolean} isShift
    * @return {boolean} true if the selection has changed
    */
-  onMouseUp(container, target, x, y, isShift) {
+  onMouseUp(doc, target, x, y, isShift) {
     this.isDown = false;
     if (this.isDragging) {
       // drop the element
@@ -108,7 +105,7 @@ class RszSelection {
     else {
       // handle multiple selection
       if (!isShift) {
-        this.getSelected(container).forEach((element) => {
+        this.getSelected(doc).forEach((element) => {
           if (element != target) this.unSelect(element, false)
         });
       }
@@ -124,14 +121,14 @@ class RszSelection {
 
   /**
    * handle selection
-   * @param {Element|null} container
+   * @param {HTMLDocument|null} doc
    * @return {Array.<Element>}
    * @export
    */
-  getSelected(container) {
-    if (container) {
+  getSelected(doc) {
+    if (doc) {
       // retrieve the selected elements
-      let nodeList = container.querySelectorAll('.rsz-selected');
+      let nodeList = doc.querySelectorAll('.rsz-selected');
       
       // convert to array
       let selected = [];
@@ -139,11 +136,6 @@ class RszSelection {
         let element = nodeList[idx];
         selected.push(element);
       }
-      // handle the container
-      if(container.classList.contains('.rsz-selected')) {
-        selected.push(container);
-      }
-
       return selected;
     }
     return [];
@@ -152,6 +144,7 @@ class RszSelection {
 
    /**
    * handle selection
+   * @param {Element} element
    */
   isSelected(element) {
     return element.classList.contains('.rsz-selected');

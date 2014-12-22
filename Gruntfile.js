@@ -1,7 +1,6 @@
 
 module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-bower-task');
 
   // js
@@ -16,7 +15,6 @@ module.exports = function(grunt) {
   // tasks
   grunt.registerTask('default', ['build']);
   grunt.registerTask('build', ['bower', 'jade', 'sass', 'closureCompiler', 'append-sourcemapping']);
-  grunt.registerTask('serve', ['connect', 'watch']);
   grunt.loadNpmTasks('grunt-append-sourcemapping');
 
   grunt.initConfig({
@@ -96,14 +94,5 @@ module.exports = function(grunt) {
         }
       }
     },
-    connect: {
-      server: {
-        options: {
-          livereload: false,
-          base: __dirname + '/dist/',
-          port: 6969
-        }
-      }
-    }
   });
 }

@@ -5,6 +5,4 @@
 *.swp
 node_modules
 bower_components
-dist/lib/*
-!dist/lib/.gitignore
 dist/test
