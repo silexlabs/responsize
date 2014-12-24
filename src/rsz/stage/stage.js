@@ -139,20 +139,49 @@ class Stage {
 
 
   /**
+   * @param {boolean} isLoading
+   * @export
+   */
+  setLoading(isLoading) {
+    if(isLoading) {
+      // mark the container as loading
+      this.iframe.parentNode.classList.add('rsz-loading');
+    }
+    else {
+      // loading ended
+      this.iframe.parentNode.classList.remove('rsz-loading');
+    }
+  }
+
+
+  /**
    * @param {string} url
    * @return {Promise}
    * @export
    */
   setUrl(url) {
     let promise = new Promise((resolve, reject) => {
+      // mark the container as loading
+      this.setLoading(true);
+
+      // wait for the iframe to be ready
       this.iframe.onload = () => {
+        // loading ended
+        this.setLoading(false);
+
         // resize and refresh view
         this.redraw();
-        
+
         // resolve the promise
         resolve(this.iframe.contentDocument);
       }
-      this.iframe.onerror = reject;
+      this.iframe.onerror = (e) => {
+        // loading ended
+        this.setLoading(false);
+
+        // resolve the promise
+        reject(e);
+      }
       this.iframe.src = url;
     });
     return promise;
@@ -175,7 +204,14 @@ class Stage {
    */
   setHtml(html) {
     let promise = new Promise((resolve, reject) => {
+      // mark the container as loading
+      this.setLoading(true);
+
+      // wait for the iframe to be ready
       this.iframe.onload = () => {
+        // loading ended
+        this.setLoading(false);
+
         // apply the html
         this.iframe.src = '';
         this.iframe.contentDocument.write(html);
@@ -186,7 +222,13 @@ class Stage {
         // resolve the promise
         resolve(this.iframe.contentDocument);
       };
-      this.iframe.onerror = (e) => reject(e);
+      this.iframe.onerror = (e) => {
+        // loading ended
+        this.setLoading(false);
+
+        // resolve the promise
+        reject(e);
+      }
       this.iframe.src = 'about:blank';
     });
     return promise;
