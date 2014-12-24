@@ -21,7 +21,7 @@ class FileService {
      * @type {string|null}
      * the current opened file
      */
-    this.currentUrl = null;
+    this.currentBlob = null;
   }
 
 
@@ -33,11 +33,38 @@ class FileService {
    */
   open() {
     return new Promise((resolve, reject) => {
-      this.cloudExplorer.pick(function(blob){
+      this.cloudExplorer.pick(
+        (blob) => {
+          console.log("my Blob: " + JSON.stringify(blob));
+          this.currentBlob = blob;
+          resolve(blob.url);
+        },
+        (e) => {
+          console.log("error " + JSON.stringify(e));
+          reject(e);
+        });
+    });
+  }
+
+
+  /**
+   * save a file
+   * returns a promise
+   * @param {string} html
+   * @return {Promise}
+   * @export
+   */
+  save(html) {
+    return new Promise((resolve, reject) => {
+      console.log('fileService save', html, this.currentBlob);
+      this.cloudExplorer.write(this.currentBlob,
+      html,
+      (blob) => {
         console.log("my Blob: " + JSON.stringify(blob));
-        this.currentUrl = blob.url;
-        resolve(blob);
-      }, function(e){
+        this.currentBlob = blob;
+        resolve(blob.url);
+      },
+      (e) => {
         console.log("error " + JSON.stringify(e));
         reject(e);
       });

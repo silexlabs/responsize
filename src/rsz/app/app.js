@@ -51,15 +51,22 @@ class App {
 
     // bind components together
     this.toolbar.onSize = (w, h) => this.stage.setSize(w, h);
-    this.toolbar.onOpenFile = () => this.fileService.open().then((blob) => this.onOpen(blob));
+    this.toolbar.onOpen = () => this.fileService.open().then((url) => this.onOpen(url));
+    this.toolbar.onSave = () => this.fileService.save(
+			this.wysiwyg.getCleanHtml()).then(() => this.onSave());
     this.wysiwyg.selectFilter = (element) => {return this.hasSiblings(element)};
-    this.wysiwyg.onSelect = () => this.toolbar.setSelection(this.wysiwyg.getSelected());
+    this.wysiwyg.onSelect = () => {
+			this.toolbar.setSelection(this.wysiwyg.getSelected());
+			this.toolbar.setDirty(true);
+		};
 
     // init
     this.wysiwyg.setSelectionMode(true);
-    this.wysiwyg.setStyleUrl(window.location.href + '/iframe.css');
     this.toolbar.setDevice(Device.desktop);
-  }
+
+    // iframe / wysiwyg style sheet
+    this.wysiwyg.addTempStyle(window.location.href + 'iframe.css');
+ }
 
 
   /**
@@ -81,13 +88,21 @@ class App {
 
   /**
    * a file has been chosen by the user in cloud explorer
-   * @param {Object} blob
+   * @param {string} url
    */
-  onOpen(blob) {
-    this.stage.setUrl(blob.url).then((doc) => {
-      this.wysiwyg.setContainer(doc.body);
+  onOpen(url) {
+    this.stage.setUrl(url).then((doc) => {
+      this.wysiwyg.setDocument(doc);
       this.toolbar.setSelection([]);
     });
+  }
+
+
+  /**
+   * a file has been saved with cloud explorer
+   */
+  onSave() {
+		this.toolbar.setDirty(false);
   }
 }
 

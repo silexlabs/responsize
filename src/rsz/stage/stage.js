@@ -58,6 +58,7 @@ class Stage {
     // store the new size
     this.width = w;
     this.height = h;
+
     // refresh display
     this.redraw();
   }
@@ -144,12 +145,26 @@ class Stage {
    */
   setUrl(url) {
     let promise = new Promise((resolve, reject) => {
-      this.iframe.onload = () => resolve(this.iframe.contentDocument);
-      this.iframe.onerror = (e) => reject(e);
+      this.iframe.onload = () => {
+        // resize and refresh view
+        this.redraw();
+        
+        // resolve the promise
+        resolve(this.iframe.contentDocument);
+      }
+      this.iframe.onerror = reject;
       this.iframe.src = url;
-      this.redraw();
     });
     return promise;
+  }
+
+
+  /**
+   * @return {string}
+   * @export
+   */
+  getHtml() {
+    return this.iframe.contentDocument.documentElement.outerHTML;
   }
 
 
@@ -161,10 +176,15 @@ class Stage {
   setHtml(html) {
     let promise = new Promise((resolve, reject) => {
       this.iframe.onload = () => {
-        this.iframe.onload = resolve(this.iframe.contentDocument);
+        // apply the html
         this.iframe.src = '';
         this.iframe.contentDocument.write(html);
+
+        // resize and refresh view
         this.redraw();
+
+        // resolve the promise
+        resolve(this.iframe.contentDocument);
       };
       this.iframe.onerror = (e) => reject(e);
       this.iframe.src = 'about:blank';

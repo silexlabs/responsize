@@ -1,5 +1,7 @@
 goog.provide('rsz.Wysiwyg');
 
+goog.require('rsz.wysiwyg.RszSelection');
+
 /**
  * This class gives the user the ability to drag and drop the elements on the stage
  * @class
@@ -11,6 +13,15 @@ class Wysiwyg {
    */
   constructor() {
     /**
+     * callback to be notified when selection changes
+     * use getSelected() to retrive the selection
+     * alternative to the use of setOnSelected
+     * @type {function()|null}
+     */
+    this.onSelect = null;
+
+
+    /**
      * selection mode on/off
      * @type {boolean}
      */
@@ -18,43 +29,13 @@ class Wysiwyg {
 
 
     /**
-     * @type {boolean}
-     * true if mouse is down
+     * @type {HTMLDocument|null}
+     * the current document
      */
-    this.isDown = false;
+    this.document = null;
 
 
-    /**
-     * @type {boolean}
-     * true if the user is dragging an element
-     */
-    this.isDragging = false;
-
-
-    /**
-     * css style sheet url, which will be loaded in the iframe (and reloaded after setContainer)
-     * This style sheet should handle the css classes of Responsize e.g. .rsz-selected
-     * @type {string|null} url
-     */
-    this.styleUrl = null;
-
-
-    /**
-     * @type {Element|null}
-     * the current container
-     */
-    this.container = null;
-
-
-    /**
-     * callback to be notified when selection changes
-     * use getSelected() to retrive the selection
-     * @type {function()|null}
-     */
-    this.onSelect = null;
-
-
-    /**
+   /**
      * callback to be notified when an element is about to be selected
      * the callback can return true to confirm or false to prevent it
      * @type {function(Element): boolean|null}
@@ -84,6 +65,20 @@ class Wysiwyg {
      * prevent click on links
      */
     this.preventClickBinded = this.onMouseUpCallback.bind(this);
+
+  
+    /**
+     * selection component
+     * @type {RszSelection|null}
+     */
+    this.selection = new RszSelection();
+
+
+    /**
+     * Dm component
+     * @type {RszDom}
+     */
+    this.dom = new RszDom();
   }
 
 
@@ -94,7 +89,7 @@ class Wysiwyg {
    * @export
    */
   setOnSelect(onSelect) {
-    return this.onSelect = onSelect;
+    return this.selection.onSelect = onSelect;
   }
 
 
@@ -105,7 +100,7 @@ class Wysiwyg {
    * @export
    */
   getOnSelect() {
-    return this.onSelect;
+    return this.selection.onSelect;
   }
 
 
@@ -132,97 +127,59 @@ class Wysiwyg {
 
 
   /**
-   * Set/get the css style sheet url, which will be loaded in the iframe (and reloaded after setContainer)
-   * This style sheet should handle the css classes of Responsize e.g. .rsz-selected
-   * @param {string|null} url
+   * remove data needed for editing
+   * @return {string}
    * @export
    */
-  setStyleUrl(url) {
-    // store the value
-    this.styleUrl = url;
-    // load the style sheet in the iframe
-    if (this.container) {
-      var tag = this.container.querySelector('#rsz-stylesheet');
-      if(!url) {
-        if (tag) {
-          this.container.removeChild(tag);
-        }
-      }
-      else {
-        if(!tag) {
-          // create a new tag if needed
-          tag = document.createElement('link');
-          tag.setAttribute('rel', 'stylesheet');
-          tag.setAttribute('type', 'text/css');
-          tag.setAttribute('id', 'rsz-stylesheet');
-          // insert the tag
-          if(this.container.firstChild) {
-            this.container.insertBefore(tag, this.container.firstChild);
-          }
-          else {
-            this.container.appendChild(tag);
-          }
-        }
-        // update the href attribute
-        tag.setAttribute('href', url);
-      }
-    }
-  }
-
-
-  /**
-   * Set/get the css style sheet url, which will be loaded in the iframe (and reloaded after setContainer)
-   * This style sheet should handle the css classes of Responsize e.g. .rsz-selected
-   * @return {string|null} url of the current style sheet
-   * @export
-   */
-  getStyleUrl() {
-    return this.styleUrl;
+  getCleanHtml() {
+    var doc = this.document.documentElement.cloneNode(true);
+    this.dom.unprepare(doc);
+    return doc.outerHTML;
   }
 
 
   /**
    * init the drag and drop events
-   * @param {Element} element
+   * @param {HTMLDocument} doc
    * @export
    */
-  setContainer(element) {
+  setDocument(doc) {
     // reset the previous container
-    if (this.container) {
-      this.container.removeEventListener('mousedown', this.onMouseDownBinded);
-      this.container.removeEventListener('mouseup', this.onMouseUpBinded);
-      this.container.removeEventListener('mousemove', this.onMouseMoveBinded);
+    if (this.document) {
+      this.document.removeEventListener('mousedown', this.onMouseDownBinded);
+      this.document.removeEventListener('mouseup', this.onMouseUpBinded);
+      this.document.removeEventListener('mousemove', this.onMouseMoveBinded);
       // prevent links
-      let doc = element.ownerDocument;
-      let anchors = doc.getElementsByTagName("a");
+      let anchors = this.document.getElementsByTagName("a");
       for (let i = 0; i < anchors.length ; i++) {
         anchors[i].removeEventListener("click", this.preventClickBinded);
       }
+      // cleanup
+      this.dom.unprepare(this.document.documentElement);
     }
 
+    // reset selection
+    this.selection.reset(this.document);
+
     // store for later use
-    this.container = element;
+    this.document = doc;
 
     // update selection mode
     this.setSelectionMode(this.selectionMode);
 
     // add the mouse events
-    this.container.addEventListener('mouseup', this.onMouseUpBinded, true);
-    this.container.addEventListener('mousedown', this.onMouseDownBinded);
-    this.container.addEventListener('mousemove', this.onMouseMoveBinded);
+    this.document.addEventListener('mouseup', this.onMouseUpBinded, true);
+    this.document.addEventListener('mousedown', this.onMouseDownBinded);
+    this.document.addEventListener('mousemove', this.onMouseMoveBinded);
 
     // prevent links
-    let doc = element.ownerDocument;
-    let anchors = doc.getElementsByTagName("a");
+    let anchors = this.document.getElementsByTagName("a");
     for (let i = 0; i < anchors.length ; i++) {
       anchors[i].addEventListener("click", this.preventClickBinded);
     }
 
-    // reset mouse
-    this.isDown = false;
-
-    // load style for the new container
-    this.setStyleUrl(this.styleUrl);
+    // prepare for edit
+    this.dom.prepare(this.document.documentElement);
   }
 
 
@@ -233,14 +190,6 @@ class Wysiwyg {
    */
   setSelectionMode(activated) {
     this.selectionMode = activated;
-    if(this.container) {
-      if(activated) {
-        this.container.classList.add('rsz-select-mode');
-      }
-      else {
-        this.container.classList.remove('rsz-select-mode');
-      }
-    }
   }
 
 
@@ -290,120 +239,85 @@ class Wysiwyg {
 
 
   /**
+   * Add a style element to the stage
+   * This element will be added again after setHtml is called
+   * This element will be removed before getHtml returns the html
+   * @param {string} url
+   * @export
+   */
+  addTempStyle(url) {
+    var element = document.createElement('link');
+    element.setAttribute('rel', 'stylesheet');
+    element.setAttribute('type', 'text/css');
+    element.setAttribute('href', url);
+    this.dom.addTempElement(this.document, element);
+  }
+
+
+  /**
    * callback for mouse events
+   * @param {Event} e
+   * @return {boolean}
    */
   onMouseUpCallback(e) {
-    this.onMouseUp(
-      this.getBestElement(/** @type {Element} */ (e.target)),
-      e.clientX,
-      e.clientY,
-      e.shiftKey
-    );
-    e.preventDefault();
-    return false;
+    if (this.selectionMode && this.document) {
+      var selectionChanged = this.selection.onMouseUp(
+        this.document,
+        this.getBestElement(/** @type {Element} */ (e.target)),
+        e.clientX,
+        e.clientY,
+        e.shiftKey
+      );
+      if (selectionChanged && this.onSelect) {
+        this.onSelect();
+      }
+      // prevent default behaviour
+      e.preventDefault();
+      return false;
+    }
+    return true;
   }
 
 
   /**
    * callback for mouse events
+   * @param {Event} e
+   * @return {boolean}
    */
   onMouseDownCallback(e) {
-    this.onMouseDown(
-      this.getBestElement(/** @type {Element} */ (e.target)),
-      e.clientX,
-      e.clientY,
-      e.shiftKey
-    )
-    e.preventDefault();
-    return false;
+    if (this.selectionMode && this.document) {
+      this.selection.onMouseDown(
+        this.document,
+        this.getBestElement(/** @type {Element} */ (e.target)),
+        e.clientX,
+        e.clientY,
+        e.shiftKey
+      )
+      e.preventDefault();
+      return false;
+    }
+    return true;
   }
 
 
   /**
    * callback for mouse events
+   * @param {Event} e
+   * @return {boolean}
    */
   onMouseMoveCallback(e) {
-    this.onMouseMove(
-      this.getBestElement(/** @type {Element} */ (e.target)),
-      e.clientX,
-      e.clientY,
-      e.shiftKey
-    )
-    e.preventDefault();
-    return false;
-  }
-
-
-  /**
-   * memorise mouse state
-   * @param {Element} target
-   * @param {number} x
-   * @param {number} y
-   * @param {boolean} isShift
-   */
-  onMouseDown(target, x, y, isShift) {
-    this.isDown = true;
-  }
-
-
-  /**
-   * start the process of drag
-   * @param {Element} target
-   * @param {number} x
-   * @param {number} y
-   * @param {boolean} isShift
-   */
-  onMouseMove(target, x, y, isShift) {
-    if (this.selectionMode) {
-      if (this.isDown) {
-        if (!this.isDragging) {
-          // start dragging
-          this.isDragging = true;
-        }
-      }
-      else {
-        // reset all candidates
-        var candidates = this.container.querySelectorAll('.rsz-select-candidate');
-        for (let idx=0; idx<candidates.length; idx++) {
-          candidates[idx].classList.remove('rsz-select-candidate');
-        }
-        
-        // reset the container
-        this.container.classList.remove('rsz-select-candidate');
-        
-        // new candidate
-        target.classList.add('rsz-select-candidate');
-      }
+    if (this.selectionMode && this.document) {
+      this.selection.onMouseMove(
+        this.document,
+        this.getBestElement(/** @type {Element} */ (e.target)),
+        e.clientX,
+        e.clientY,
+        e.shiftKey
+      )
+      e.preventDefault();
+      return false;
     }
-  }
-
-
-  /**
-   * ends the process of drag, drop the target
-   * handle selection too
-   * @param {Element} target
-   * @param {number} x
-   * @param {number} y
-   * @param {boolean} isShift
-   */
-  onMouseUp(target, x, y, isShift) {
-    this.isDown = false;
-    if (this.selectionMode) {
-      if (this.isDragging) {
-        // drop the element
-        this.isDragging = false;
-      }
-      else {
-        // handle multiple selection
-        if (!isShift) {
-          this.getSelected().forEach((element) => {
-            if (element != target) this.unSelect(element, false)
-          });
-        }
-        // select the element
-        this.select(target);
-      }
-    }
+    return true;
   }
 
 
@@ -413,72 +327,7 @@ class Wysiwyg {
    * @export
    */
   getSelected() {
-    // retrieve the selected elements
-    let nodeList = this.container.querySelectorAll('.rsz-selected');
-    
-    // convert to array
-    let selected = [];
-    for (let idx=0; idx<nodeList.length; idx++) {
-      let element = nodeList[idx];
-      selected.push(element);
-    }
-    // handle the container
-    if(this.container.classList.contains('.rsz-selected')) {
-      selected.push(this.container);
-    }
-
-    return selected;
-  }
-
-
-   /**
-   * handle selection
-   */
-  isSelected(element) {
-    return element.classList.contains('.rsz-selected');
-  }
-
-
-  /**
-   * handle selection
-   * @param {Element} element
-   * @param {?boolean=} notify (defaults to true)
-   */
-  select(element, notify) {
-    if(!element.classList.contains('rsz-selected')) {
-      element.classList.add('rsz-selected');
-      if(notify !== false && this.onSelect) {
-        this.onSelect();
-      }
-    }
-  }
-
-
-  /**
-   * handle selection
-   * @param {Element} element
-   * @param {?boolean=} notify (defaults to true)
-   */
-  unSelect(element, notify) {
-    if(element.classList.contains('rsz-selected')) {
-      element.classList.remove('rsz-selected');
-      if(notify !== false && this.onSelect) {
-        this.onSelect();
-      }
-    }
-}
-
-
-  /**
-   * handle selection
-   * @param {Element} element
-   * @param {?boolean=} notify (defaults to true)
-   */
-  toggleSelect(element, notify) {
-    element.classList.toggle('rsz-selected');
-    if(notify !== false && this.onSelect) {
-      this.onSelect();
-    }
+    return this.selection.getSelected(this.document);
   }
 }
 

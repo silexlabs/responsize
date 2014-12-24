@@ -67,20 +67,20 @@ class Toolbar {
      * @type {Array.<Element>}
      */
     this.selection = [];
-    
+
 
     /**
      * callback for the app to be notified that the user wants to open a file
      * @type {function()|null}
      */
-    this.onOpenFile = null;
+    this.onOpen = null;
 
 
     /**
     * callback for the app to be notified that the user wants to save the current file
      * @type {function()|null}
      */
-    this.onSaveFile = null;
+    this.onSave = null;
 
 
     /**
@@ -114,14 +114,13 @@ class Toolbar {
   onClick(e) {
     var element = e.target;
     if(element.classList.contains('open')) {
-      if (this.onOpenFile) {
-        this.onOpenFile();
+      if (this.onOpen) {
+        this.onOpen();
       }
     }
     if(element.classList.contains('save')) {
-      this.setDirty(false);
-      if (this.onSaveFile) {
-        this.onSaveFile();
+      if (this.onSave) {
+        this.onSave();
       }
     }
     else if(element.classList.contains('mobile')) {
