@@ -213,8 +213,11 @@ class Stage {
         this.setLoading(false);
 
         // apply the html
-        this.iframe.src = '';
-        this.iframe.contentDocument.write(html);
+        if(html !== '') {
+          // only if the html is not "blank"
+          this.iframe.src = '';
+          this.iframe.contentDocument.write(html);
+        }
 
         // resize and refresh view
         this.redraw();
