@@ -64,7 +64,7 @@ class Wysiwyg {
     /**
      * prevent click on links
      */
-    this.preventClickBinded = this.onMouseUpCallback.bind(this);
+    this.preventClickBinded = this.perventClick.bind(this);
 
   
     /**
@@ -149,11 +149,10 @@ class Wysiwyg {
       this.document.removeEventListener('mousedown', this.onMouseDownBinded);
       this.document.removeEventListener('mouseup', this.onMouseUpBinded);
       this.document.removeEventListener('mousemove', this.onMouseMoveBinded);
+      
       // prevent links
-      let anchors = this.document.getElementsByTagName("a");
-      for (let i = 0; i < anchors.length ; i++) {
-        anchors[i].removeEventListener("click", this.preventClickBinded);
-      }
+      this.document.removeEventListener("click", this.preventClickBinded, true);
+      
       // cleanup
       this.dom.unprepare(this.document.documentElement);
     }
@@ -173,10 +172,7 @@ class Wysiwyg {
     this.document.addEventListener('mousemove', this.onMouseMoveBinded);
 
     // prevent links
-    let anchors = this.document.getElementsByTagName("a");
-    for (let i = 0; i < anchors.length ; i++) {
-      anchors[i].addEventListener("click", this.preventClickBinded);
-    }
+    this.document.addEventListener("click", this.preventClickBinded, true);
 
     // prepare for edit
     this.dom.prepare(this.document.documentElement);
@@ -255,9 +251,20 @@ class Wysiwyg {
 
 
   /**
+   * prevent click
+   */
+  perventClick(e) {
+    if (this.selectionMode) {
+      // prevent default behaviour
+      e.stopPropagation();
+      e.preventDefault();
+    }
+  }
+
+
+  /**
    * callback for mouse events
    * @param {Event} e
-   * @return {boolean}
    */
   onMouseUpCallback(e) {
     if (this.selectionMode && this.document) {
@@ -273,16 +280,13 @@ class Wysiwyg {
       }
       // prevent default behaviour
       e.preventDefault();
-      return false;
     }
-    return true;
   }
 
 
   /**
    * callback for mouse events
    * @param {Event} e
-   * @return {boolean}
    */
   onMouseDownCallback(e) {
     if (this.selectionMode && this.document) {
@@ -294,16 +298,13 @@ class Wysiwyg {
         e.shiftKey
       )
       e.preventDefault();
-      return false;
     }
-    return true;
   }
 
 
   /**
    * callback for mouse events
    * @param {Event} e
-   * @return {boolean}
    */
   onMouseMoveCallback(e) {
     if (this.selectionMode && this.document) {
@@ -315,9 +316,7 @@ class Wysiwyg {
         e.shiftKey
       )
       e.preventDefault();
-      return false;
     }
-    return true;
   }
 
 

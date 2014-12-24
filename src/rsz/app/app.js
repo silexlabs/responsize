@@ -75,14 +75,17 @@ class App {
    * @export
    */
   hasSiblings(element) {
-    let numChildren = 0;
-    for(let idx in element.parentNode.childNodes) {
-      let el = element.parentNode.childNodes[idx];
-      if(el.nodeType === 1) {
-        numChildren++;
+    if(element && element.parentNode && element.parentNode.childNodes) {
+      let numChildren = 0;
+      for(let idx in element.parentNode.childNodes) {
+        let el = element.parentNode.childNodes[idx];
+        if(el.nodeType === 1) {
+          numChildren++;
+        }
       }
+      return numChildren > 1;
     }
-    return numChildren > 1;
+    return false;
   }
 
 
