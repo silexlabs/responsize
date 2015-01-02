@@ -4,7 +4,8 @@
   right: 0;
   bottom: 0;
   position: absolute;
-  background-color: #808080;
+  background-color: #f38a47;
+  background-image: url('assets/responsize-small.png');
   overflow: hidden; }
   .stage.rsz-loading .loader {
     display: block; }
