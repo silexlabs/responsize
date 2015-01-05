@@ -35,7 +35,7 @@ var stage = new rsz.Stage(element.querySelector('#stage'));
 
 // load a website in the stage, beware of the cross site scripting,
 // security has to be met here
-// or you can load the HTML content with an ajax call 
+// or you can load the HTML content with an ajax call
 // and then use stage.setHtml() to set the iframe HTML content
 // (note: use the HTML <base> tag if needed to make sure the relative paths are loaded correctly)
 stage.setUrl('http://www.silexlabs.org').then(function(doc){
@@ -44,14 +44,14 @@ stage.setUrl('http://www.silexlabs.org').then(function(doc){
 
   // if you use the Wysiwyg class along with the Stage class
   // you need to update the container to which to appy the Wysiwyg feature
-  wysiwyg.setContainer(doc.body);
+  wysiwyg.setDocument(doc);
 });
 
 // set the stage size to 1920x1024
 // if your screen is smaller than that,
-// Resonsize will load it with the desired size 
+// Resonsize will load it with the desired size
 // and then scale it using css3 transform, to fit the #stage element.
-// you could simply let the stage auto size to loaded content: do not call Stage::setSize 
+// you could simply let the stage auto size to loaded content: do not call Stage::setSize
 // or set stage.autoSize to true before calling stage.setUrl
 stage.setSize(1920, 1024);
 
