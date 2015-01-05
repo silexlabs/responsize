@@ -251,6 +251,21 @@ class Wysiwyg {
 
 
   /**
+   * Add a script element to the stage
+   * This element will be added again after setHtml is called
+   * This element will be removed before getHtml returns the html
+   * @param {string} url
+   * @export
+   */
+  addTempScript(url) {
+    var element = document.createElement('script');
+    element.setAttribute('type', 'text/javascript');
+    element.setAttribute('src', url);
+    this.dom.addTempElement(this.document, element);
+  }
+
+
+  /**
    * prevent click
    */
   perventClick(e) {
