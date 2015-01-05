@@ -6,7 +6,8 @@ $frameTransition: width .5s, top .5s, left .5s, height .5s, transform .5s;
   right: $stageRight;
   bottom: $stageBottom;
   position: absolute;
-  background-color: $color0;
+  background-color: $rsz-orange;
+  background-image: url('assets/responsize-small.png');
   overflow: hidden;
 
   &.rsz-loading {
