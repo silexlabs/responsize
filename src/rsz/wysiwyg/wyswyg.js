@@ -66,7 +66,7 @@ class Wysiwyg {
      */
     this.preventClickBinded = this.perventClick.bind(this);
 
-  
+
     /**
      * selection component
      * @type {RszSelection|null}
@@ -149,10 +149,10 @@ class Wysiwyg {
       this.document.removeEventListener('mousedown', this.onMouseDownBinded);
       this.document.removeEventListener('mouseup', this.onMouseUpBinded);
       this.document.removeEventListener('mousemove', this.onMouseMoveBinded);
-      
+
       // prevent links
       this.document.removeEventListener("click", this.preventClickBinded, true);
-      
+
       // cleanup
       this.dom.unprepare(this.document.documentElement);
     }
@@ -197,7 +197,7 @@ class Wysiwyg {
    * @export
    */
   getBestElement(target) {
-    /** @type {Element} */ 
+    /** @type {Element} */
     let best = target;
     // loop while we have no siblings
     while(best && this.selectFilter && !this.selectFilter(best)) {
