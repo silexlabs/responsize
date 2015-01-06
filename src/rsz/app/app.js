@@ -54,14 +54,28 @@ class App {
     this.toolbar.onOpen = () => this.fileService.open().then((url) => this.onOpen(url));
     this.toolbar.onSave = () => this.fileService.save(
 			this.wysiwyg.getCleanHtml()).then(() => this.onSave());
+    // selection
     this.wysiwyg.selectFilter = (element) => {return this.hasSiblings(element)};
     this.wysiwyg.onSelect = () => {
-			this.toolbar.setSelection(this.wysiwyg.getSelected());
-			this.toolbar.setDirty(true);
-		};
+      this.toolbar.setSelection(this.wysiwyg.getSelected());
+      this.toolbar.setDirty(true);
+    };
+    // resize
+    this.wysiwyg.filterBoundingBox = (element, rect) => {
+      this.toolbar.setDirty(true);
+      this.responsizer.setWidth(
+        element,
+        rect.right - rect.left,
+        this.stage.getSize().width);
+      // prevent resize from the Wysiwyg class
+      return null;
+    };
+    this.wysiwyg.onResized = () => {
+    };
 
     // init
     this.wysiwyg.setSelectionMode(true);
+    this.wysiwyg.setResizeMode(true);
     this.toolbar.setDevice(Device.desktop);
 
     // iframe / wysiwyg style sheet

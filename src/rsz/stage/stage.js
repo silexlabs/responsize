@@ -34,6 +34,7 @@ class Stage {
      */
     this.height= 1;
 
+
     /**
      * @type {boolean}
      */
@@ -61,6 +62,19 @@ class Stage {
 
     // refresh display
     this.redraw();
+  }
+
+
+  /**
+   * retuns the current rendering size of the website
+   * @return {{width: number, height:number}}
+   * @export
+   */
+  getSize() {
+    return {
+      'width': this.width,
+      'height': this.height
+    }
   }
 
 

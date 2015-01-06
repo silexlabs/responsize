@@ -13,9 +13,11 @@ class Responsizer {
 
 
   /**
-   * init the iframe dom with responsize styles
+   * add responsize styles to the iframe dom
+   * convert silex website to responsive
+   * add bootstrap when needed
    */
-  init(doc){
+  convert(doc){
     /*
     // find the body
     let parent = element;
@@ -30,37 +32,39 @@ class Responsizer {
       }
     }
     */
+    // FIXME: do this only for silex sites
+    // and call this.responsize for each silex-editable element
     let style = doc.querySelector('head style#responsize-style');
-      if(style === null) {
-        let style = doc.createElement('style');
-        style.innerHTML = '\
-          .rsz-responsized, .rsz-responsized * {\
-            position: relative !important;\
-            max-width: 100% !important;\
-            top: auto !important;\
-            left: auto !important;\
-            width: auto !important;\
-            height: auto !important;\
-            top: initial !important;\
-            left: initial !important;\
-            width: initial !important;\
-            height: initial !important;\
-            margin: 0 !important;\
-            padding: 0 !important;\
-          }\
-        ';
-        style.id = 'responsize-style';
-        doc.head.appendChild(style);
+    if(style === null) {
+      let style = doc.createElement('style');
+      style.innerHTML = '\
+        .rsz-responsized, .rsz-responsized * {\
+          position: relative !important;\
+          max-width: 100% !important;\
+          top: auto !important;\
+          left: auto !important;\
+          width: auto !important;\
+          height: auto !important;\
+          top: initial !important;\
+          left: initial !important;\
+          width: initial !important;\
+          height: initial !important;\
+          margin: 0 !important;\
+          padding: 0 !important;\
+        }\
+      ';
+      style.id = 'responsize-style';
+      doc.head.appendChild(style);
 
-        let link = doc.createElement('link');
-        link.rel = 'stylesheet';
-        link.href = 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css';
-        doc.head.appendChild(link);
+      let link = doc.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css';
+      doc.head.appendChild(link);
 
-        let script = doc.createElement('script');
-        script.src = 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js';
-        doc.head.appendChild(script);
-      }
+      let script = doc.createElement('script');
+      script.src = 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js';
+      doc.head.appendChild(script);
+    }
   }
 
 
@@ -106,6 +110,45 @@ class Responsizer {
         console.log('bbb', element);
       }
     });
+  }
+
+
+  /**
+   * set a size to an element using bootstrap classes
+   * @param {Element} element
+   * @param {number} width
+   * @param {number} screenWidth
+   */
+  setWidth(element, width, screenWidth) {
+    // get the container bounding box
+    let parentRect = element.parentNode.getBoundingClientRect();
+
+    // compute the size of a column
+    var totalWidth = parentRect.right - parentRect.left;
+    var colWidth = Math.round(totalWidth / 12);
+
+    // compute the width in term of columns
+    var numCol = Math.max(1, Math.round(width / colWidth));
+
+    // compute bootstrap prefix
+    let prefix = 'col-xs-';
+    if(screenWidth > 1200) {
+      prefix = 'col-lg-';
+    }
+    else if(screenWidth > 970) {
+      prefix = 'col-md-';
+    }
+    else if(screenWidth > 750) {
+      prefix = 'col-sm-';
+    }
+
+    // remove all bootstrap classes for the given screen size
+    for (let idx=1; idx<=12; idx++) {
+      element.classList.remove(prefix + idx);
+    }
+
+    // apply the new bootstrap class
+    element.classList.add(prefix + numCol);
   }
 }
 

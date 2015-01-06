@@ -1,6 +1,8 @@
 goog.provide('rsz.Wysiwyg');
 
 goog.require('rsz.wysiwyg.RszSelection');
+goog.require('rsz.wysiwyg.RszResize');
+goog.require('rsz.wysiwyg.RszDom');
 
 /**
  * This class gives the user the ability to drag and drop the elements on the stage
@@ -22,10 +24,12 @@ class Wysiwyg {
 
 
     /**
-     * selection mode on/off
-     * @type {boolean}
+     * callback to be notified when an element has been resized
+     * use getSelected() to retrive the selection
+     * alternative to the use of setOnResized
+     * @type {function()|null}
      */
-    this.selectionMode = false;
+    this.onResized = null;
 
 
     /**
@@ -43,22 +47,32 @@ class Wysiwyg {
     this.selectFilter = null;
 
 
+   /**
+     * callback to apply the given size to the element
+     * let you implement your app logic here
+     * you are expected to return a rect object with left, right, top, bottom
+     * or null if you apply the size to the element by yourself
+     * @type {function(Element, Object.<number>):Object.<number>|null}
+     */
+    this.filterBoundingBox = null;
+
+
     /**
      * binded reference to use to attach / detach to events
      */
-    this.onMouseDownBinded = this.onMouseDownCallback.bind(this);
+    this.onMouseDownBinded = this.onMouseDown.bind(this);
 
 
     /**
      * binded reference to use to attach / detach to events
      */
-    this.onMouseUpBinded = this.onMouseUpCallback.bind(this);
+    this.onMouseUpBinded = this.onMouseUp.bind(this);
 
 
     /**
      * binded reference to use to attach / detach to events
      */
-    this.onMouseMoveBinded = this.onMouseMoveCallback.bind(this);
+    this.onMouseMoveBinded = this.onMouseMove.bind(this);
 
 
     /**
@@ -71,14 +85,35 @@ class Wysiwyg {
      * selection component
      * @type {RszSelection|null}
      */
-    this.selection = new RszSelection();
+    this.rszSelection = new RszSelection();
 
 
     /**
-     * Dm component
+     * resize component
+     * @type {RszResize|null}
+     */
+    this.rszResize = new RszResize();
+
+
+    /**
+     * selection mode on/off
+     * @type {boolean}
+     */
+    this.selectionMode = false;
+
+
+    /**
+     * allow resize feature
+     * @type {boolean}
+     */
+    this.resizeMode = false;
+
+
+    /**
+     * Dom component
      * @type {RszDom}
      */
-    this.dom = new RszDom();
+    this.rszDom = new RszDom();
   }
 
 
@@ -89,7 +124,7 @@ class Wysiwyg {
    * @export
    */
   setOnSelect(onSelect) {
-    return this.selection.onSelect = onSelect;
+    return this.rszSelection.onChanged = onSelect;
   }
 
 
@@ -100,7 +135,7 @@ class Wysiwyg {
    * @export
    */
   getOnSelect() {
-    return this.selection.onSelect;
+    return this.rszSelection.onChanged;
   }
 
 
@@ -133,7 +168,7 @@ class Wysiwyg {
    */
   getCleanHtml() {
     var doc = this.document.documentElement.cloneNode(true);
-    this.dom.unprepare(doc);
+    this.rszDom.unprepare(doc);
     return doc.outerHTML;
   }
 
@@ -154,11 +189,11 @@ class Wysiwyg {
       this.document.removeEventListener("click", this.preventClickBinded, true);
 
       // cleanup
-      this.dom.unprepare(this.document.documentElement);
+      this.rszDom.unprepare(this.document.documentElement);
     }
 
     // reset selection
-    this.selection.reset(this.document);
+    this.rszSelection.reset(this.document);
 
     // store for later use
     this.document = doc;
@@ -175,7 +210,7 @@ class Wysiwyg {
     this.document.addEventListener("click", this.preventClickBinded, true);
 
     // prepare for edit
-    this.dom.prepare(this.document.documentElement);
+    this.rszDom.prepare(this.document.documentElement);
   }
 
 
@@ -186,6 +221,16 @@ class Wysiwyg {
    */
   setSelectionMode(activated) {
     this.selectionMode = activated;
+  }
+
+
+  /**
+   * resize mode
+   * @param {boolean} activated
+   * @export
+   */
+  setResizeMode(activated) {
+    this.resizeMode = activated;
   }
 
 
@@ -246,7 +291,7 @@ class Wysiwyg {
     element.setAttribute('rel', 'stylesheet');
     element.setAttribute('type', 'text/css');
     element.setAttribute('href', url);
-    this.dom.addTempElement(this.document, element);
+    this.rszDom.addTempElement(this.document, element);
   }
 
 
@@ -261,7 +306,7 @@ class Wysiwyg {
     var element = document.createElement('script');
     element.setAttribute('type', 'text/javascript');
     element.setAttribute('src', url);
-    this.dom.addTempElement(this.document, element);
+    this.rszDom.addTempElement(this.document, element);
   }
 
 
@@ -281,20 +326,36 @@ class Wysiwyg {
    * callback for mouse events
    * @param {Event} e
    */
-  onMouseUpCallback(e) {
-    if (this.selectionMode && this.document) {
-      var selectionChanged = this.selection.onMouseUp(
-        this.document,
-        this.getBestElement(/** @type {Element} */ (e.target)),
-        e.clientX,
-        e.clientY,
-        e.shiftKey
-      );
-      if (selectionChanged && this.onSelect) {
-        this.onSelect();
+  onMouseUp(e) {
+    if (this.document) {
+      /** @type {Element} */
+      let bestElement = this.getBestElement(/** @type {Element} */ (e.target));
+      // handle selection
+      if (this.selectionMode) {
+        var selectionChanged = this.rszSelection.onMouseUp(
+          this.document,
+          this.getBestElement(/** @type {Element} */ (e.target)),
+          e.clientX,
+          e.clientY,
+          e.shiftKey
+        );
+        if (selectionChanged && this.onSelect) {
+          this.onSelect();
+        }
       }
-      // prevent default behaviour
-      e.preventDefault();
+      // handle resize
+      if (this.resizeMode) {
+        var sizeChanged = this.rszResize.onMouseUp(
+          this.document,
+          bestElement,
+          e.clientX,
+          e.clientY,
+          e.shiftKey
+        );
+        if(this.onResized && sizeChanged) {
+          this.onResized();
+        }
+      }
     }
   }
 
@@ -303,16 +364,30 @@ class Wysiwyg {
    * callback for mouse events
    * @param {Event} e
    */
-  onMouseDownCallback(e) {
-    if (this.selectionMode && this.document) {
-      this.selection.onMouseDown(
-        this.document,
-        this.getBestElement(/** @type {Element} */ (e.target)),
-        e.clientX,
-        e.clientY,
-        e.shiftKey
-      )
-      e.preventDefault();
+  onMouseDown(e) {
+    if (this.document) {
+      /** @type {Element} */
+      let bestElement = this.getBestElement(/** @type {Element} */ (e.target));
+      // handle selection
+      if (this.selectionMode) {
+        this.rszSelection.onMouseDown(
+          this.document,
+          bestElement,
+          e.clientX,
+          e.clientY,
+          e.shiftKey
+        );
+      }
+      // handle resize
+      if (this.resizeMode) {
+        this.rszResize.onMouseDown(
+          this.document,
+          bestElement,
+          e.clientX,
+          e.clientY,
+          e.shiftKey
+        );
+      }
     }
   }
 
@@ -321,16 +396,34 @@ class Wysiwyg {
    * callback for mouse events
    * @param {Event} e
    */
-  onMouseMoveCallback(e) {
-    if (this.selectionMode && this.document) {
-      this.selection.onMouseMove(
-        this.document,
-        this.getBestElement(/** @type {Element} */ (e.target)),
-        e.clientX,
-        e.clientY,
-        e.shiftKey
-      )
-      e.preventDefault();
+  onMouseMove(e) {
+    if (this.document) {
+      /** @type {Element} */
+      let bestElement = this.getBestElement(/** @type {Element} */ (e.target));
+      // handle selection
+      if (this.selectionMode) {
+        this.rszSelection.onMouseMove(
+          this.document,
+          bestElement,
+          e.clientX,
+          e.clientY,
+          e.shiftKey
+        );
+      }
+      // handle resize
+      if (this.resizeMode) {
+        this.rszResize.onMouseMove(
+          this.document,
+          bestElement,
+          e.clientX,
+          e.clientY,
+          e.shiftKey,
+          this.filterBoundingBox
+        );
+      }
+      if(this.selectionMode || this.resizeMode) {
+        e.preventDefault();
+      }
     }
   }
 
@@ -341,7 +434,7 @@ class Wysiwyg {
    * @export
    */
   getSelected() {
-    return this.selection.getSelected(this.document);
+    return this.rszSelection.getSelected(this.document);
   }
 }
 
