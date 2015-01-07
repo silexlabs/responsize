@@ -70,6 +70,7 @@ class RszResize {
    * @param {number} x
    * @param {number} y
    * @param {boolean} isShift
+   * @return {boolean} true if the size has changed
    */
   onMouseDown(doc, target, x, y, isShift) {
     // get the bounding box of the target
@@ -85,6 +86,7 @@ class RszResize {
     else {
       this.currentElement = null;
     }
+    return false;
   }
 
 
@@ -98,6 +100,7 @@ class RszResize {
    * @param {?function(Element, Object.<number>):Object.<number>=} opt_filterBoundingBox
    *                callback to apply the given size to the element
    *                let you implement your app logic here
+   * @return {boolean} true if the size has changed
    */
   onMouseMove(doc, target, x, y, isShift, opt_filterBoundingBox) {
     // handle cursor and compute new size
@@ -129,7 +132,9 @@ class RszResize {
         this.currentElement.style.width = (newRect.right - newRect.left) + 'px';
         this.currentElement.style.height = (newRect.bottom - newRect.top) + 'px';
       }
+      return true;
     }
+    return false;
   }
 
 

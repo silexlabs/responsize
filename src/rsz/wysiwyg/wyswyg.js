@@ -78,7 +78,7 @@ class Wysiwyg {
     /**
      * prevent click on links
      */
-    this.preventClickBinded = this.perventClick.bind(this);
+    this.preventDefaultBinded = this.preventDefault.bind(this);
 
 
     /**
@@ -186,7 +186,7 @@ class Wysiwyg {
       this.document.removeEventListener('mousemove', this.onMouseMoveBinded);
 
       // prevent links
-      this.document.removeEventListener("click", this.preventClickBinded, true);
+      this.document.removeEventListener("click", this.preventDefaultBinded, true);
 
       // cleanup
       this.rszDom.unprepare(this.document.documentElement);
@@ -207,7 +207,7 @@ class Wysiwyg {
     this.document.addEventListener('mousemove', this.onMouseMoveBinded);
 
     // prevent links
-    this.document.addEventListener("click", this.preventClickBinded, true);
+    this.document.addEventListener("click", this.preventDefaultBinded, true);
 
     // prepare for edit
     this.rszDom.prepare(this.document.documentElement);
@@ -313,8 +313,8 @@ class Wysiwyg {
   /**
    * prevent click
    */
-  perventClick(e) {
-    if (this.selectionMode) {
+  preventDefault(e) {
+    if (this.selectionMode || this.resizeMode) {
       // prevent default behaviour
       e.stopPropagation();
       e.preventDefault();
@@ -330,6 +330,7 @@ class Wysiwyg {
     if (this.document) {
       /** @type {Element} */
       let bestElement = this.getBestElement(/** @type {Element} */ (e.target));
+
       // handle selection
       if (this.selectionMode) {
         var selectionChanged = this.rszSelection.onMouseUp(
@@ -343,6 +344,7 @@ class Wysiwyg {
           this.onSelect();
         }
       }
+
       // handle resize
       if (this.resizeMode) {
         var sizeChanged = this.rszResize.onMouseUp(
@@ -398,11 +400,13 @@ class Wysiwyg {
    */
   onMouseMove(e) {
     if (this.document) {
+      let hasChanged = false;
+
       /** @type {Element} */
       let bestElement = this.getBestElement(/** @type {Element} */ (e.target));
       // handle selection
       if (this.selectionMode) {
-        this.rszSelection.onMouseMove(
+        hasChanged = hasChanged || this.rszSelection.onMouseMove(
           this.document,
           bestElement,
           e.clientX,
@@ -412,7 +416,7 @@ class Wysiwyg {
       }
       // handle resize
       if (this.resizeMode) {
-        this.rszResize.onMouseMove(
+        hasChanged = hasChanged || this.rszResize.onMouseMove(
           this.document,
           bestElement,
           e.clientX,
@@ -421,8 +425,8 @@ class Wysiwyg {
           this.filterBoundingBox
         );
       }
-      if(this.selectionMode || this.resizeMode) {
-        e.preventDefault();
+      if(hasChanged) {
+        this.preventDefault(e);
       }
     }
   }

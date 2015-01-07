@@ -40,9 +40,7 @@ class RszSelection {
      // reset mouse
     this.isDown = false;
     // selection
-    this.getSelected(doc).forEach((element) => {
-      this.unSelect(element, false);
-    });
+    this.unSelectAll(doc, false);
   }
 
   /**
@@ -52,9 +50,11 @@ class RszSelection {
    * @param {number} x
    * @param {number} y
    * @param {boolean} isShift
+   * @return {boolean} true if the selection has changed
    */
   onMouseDown(doc, target, x, y, isShift) {
     this.isDown = true;
+    return false;
   }
 
 
@@ -65,6 +65,7 @@ class RszSelection {
    * @param {number} x
    * @param {number} y
    * @param {boolean} isShift
+   * @return {boolean} true if the selection has changed
    */
   onMouseMove(doc, target, x, y, isShift) {
     if (this.isDown) {
@@ -83,6 +84,7 @@ class RszSelection {
       // new candidate
       target.classList.add('rsz-select-candidate');
     }
+    return false;
   }
 
 
@@ -178,7 +180,18 @@ class RszSelection {
         this.onChanged();
       }
     }
-}
+  }
+
+
+  /**
+   * handle selection
+   * @param {?boolean=} notify (defaults to true)
+   */
+  unSelectAll(doc, notify) {
+    this.getSelected(doc).forEach((element) => {
+      this.unSelect(element, notify);
+    });
+  }
 
 
   /**
