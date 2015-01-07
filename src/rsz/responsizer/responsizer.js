@@ -132,13 +132,13 @@ class Responsizer {
 
     // compute bootstrap prefix
     let prefix = 'col-xs-';
-    if(screenWidth > 1200) {
+    if(screenWidth >= 1200) {
       prefix = 'col-lg-';
     }
-    else if(screenWidth > 970) {
+    else if(screenWidth >= 992) {
       prefix = 'col-md-';
     }
-    else if(screenWidth > 750) {
+    else if(screenWidth >= 768) {
       prefix = 'col-sm-';
     }
 

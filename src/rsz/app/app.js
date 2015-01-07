@@ -55,7 +55,7 @@ class App {
     this.toolbar.onSave = () => this.fileService.save(
 			this.wysiwyg.getCleanHtml()).then(() => this.onSave());
     // selection
-    this.wysiwyg.selectFilter = (element) => {return this.hasSiblings(element)};
+    this.wysiwyg.selectFilter = (element) => {return this.isBootstrapCol(element)};
     this.wysiwyg.onSelect = () => {
       this.toolbar.setSelection(this.wysiwyg.getSelected());
       this.toolbar.setDirty(true);
@@ -100,6 +100,18 @@ class App {
       return numChildren > 1;
     }
     return false;
+  }
+
+
+  /**
+   * @return {boolean} true if the element has a parent which is a row
+   * @export
+   */
+  isBootstrapCol(element) {
+    return element &&
+      element.parentNode &&
+      element.parentNode.classList &&
+      element.parentNode.classList.contains('row');
   }
 
 

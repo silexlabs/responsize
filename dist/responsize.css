@@ -70,6 +70,8 @@
     background-image: url('assets/iphone-blanc-h.png'); }
   .toolbar .tablet {
     background-image: url('assets/ipad-blanc.png'); }
+  .toolbar .tablet-h {
+    background-image: url('assets/ipad-blanc-h.png'); }
   .toolbar .desktop {
     background-image: url('assets/imac-blanc.png'); }
   .toolbar .button {

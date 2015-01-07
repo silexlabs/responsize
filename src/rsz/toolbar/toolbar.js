@@ -20,8 +20,8 @@ var Device = {
 var DeviceData = [
   {name: 'mobile', width: 320, height: 480}, // bootstrap xs
   {name: 'mobile-h', width: 476, height: 320}, // xs
-  {name: 'tablet', width: 768, height: 1024}, // sm
-  {name: 'tablet-h', width: 1024, height: 768}, // md
+  {name: 'tablet', width: 769, height: 1024}, // sm (769 not 768 because website need to display the sm version)
+  {name: 'tablet-h', width: 1024, height: 769}, // md
   {name: 'desktop', width: 1280, height: 800}, // lg
 ]
 
@@ -42,26 +42,26 @@ class Toolbar {
      * @type {Element};
      */
     this.element = element;
-    
-    
+
+
     /**
      * @type {number}
      */
     this.selectedDevice = Device.desktop;
-    
+
 
     /**
      * @type {Element}
      */
     this.openElement = this.element.querySelector('.open');
-    
+
 
 
     /**
      * @type {Element}
      */
     this.saveElement = this.element.querySelector('.save');
-    
+
 
     /**
      * @type {Array.<Element>}
@@ -131,6 +131,9 @@ class Toolbar {
     }
     else if(element.classList.contains('tablet')) {
       this.setDevice(Device.tablet);
+    }
+    else if(element.classList.contains('tablet-h')) {
+      this.setDevice(Device.tabletH);
     }
     else if(element.classList.contains('desktop')) {
       this.setDevice(Device.desktop);
