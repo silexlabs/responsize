@@ -10,3 +10,11 @@
 
 body.rsz-select-mode {
 }
+
+body.rsz-resize-ew * {
+  cursor: ew-resize;
+}
+
+body.rsz-resize-ns * {
+  cursor: ns-resize;
+}

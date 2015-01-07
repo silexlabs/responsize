@@ -4,3 +4,10 @@
 
 .rsz-selected {
   box-shadow: 0px 0px 5px #000; }
+
+
+body.rsz-resize-ew * {
+  cursor: ew-resize; }
+
+body.rsz-resize-ns * {
+  cursor: ns-resize; }

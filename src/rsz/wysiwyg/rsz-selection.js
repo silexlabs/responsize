@@ -15,7 +15,7 @@ class RszSelection {
      * use getSelected() to retrive the selection
      * @type {function()|null}
      */
-    this.onSelect = null;
+    this.onChanged = null;
 
 
     /**
@@ -34,15 +34,13 @@ class RszSelection {
 
   /**
    * reset selection
-   * @param {HTMLDocument} doc 
+   * @param {HTMLDocument} doc
    */
   reset(doc) {
      // reset mouse
     this.isDown = false;
     // selection
-    this.getSelected(doc).forEach((element) => {
-      this.unSelect(element, false);
-    });
+    this.unSelectAll(doc, false);
   }
 
   /**
@@ -52,9 +50,11 @@ class RszSelection {
    * @param {number} x
    * @param {number} y
    * @param {boolean} isShift
+   * @return {boolean} true if the selection has changed
    */
   onMouseDown(doc, target, x, y, isShift) {
     this.isDown = true;
+    return false;
   }
 
 
@@ -65,6 +65,7 @@ class RszSelection {
    * @param {number} x
    * @param {number} y
    * @param {boolean} isShift
+   * @return {boolean} true if the selection has changed
    */
   onMouseMove(doc, target, x, y, isShift) {
     if (this.isDown) {
@@ -79,10 +80,11 @@ class RszSelection {
       for (let idx=0; idx<candidates.length; idx++) {
         candidates[idx].classList.remove('rsz-select-candidate');
       }
-      
+
       // new candidate
       target.classList.add('rsz-select-candidate');
     }
+    return false;
   }
 
 
@@ -129,7 +131,7 @@ class RszSelection {
     if (doc) {
       // retrieve the selected elements
       let nodeList = doc.querySelectorAll('.rsz-selected');
-      
+
       // convert to array
       let selected = [];
       for (let idx=0; idx<nodeList.length; idx++) {
@@ -159,8 +161,8 @@ class RszSelection {
   select(element, notify) {
     if(!element.classList.contains('rsz-selected')) {
       element.classList.add('rsz-selected');
-      if(notify !== false && this.onSelect) {
-        this.onSelect();
+      if(notify !== false && this.onChanged) {
+        this.onChanged();
       }
     }
   }
@@ -174,11 +176,22 @@ class RszSelection {
   unSelect(element, notify) {
     if(element.classList.contains('rsz-selected')) {
       element.classList.remove('rsz-selected');
-      if(notify !== false && this.onSelect) {
-        this.onSelect();
+      if(notify !== false && this.onChanged) {
+        this.onChanged();
       }
     }
-}
+  }
+
+
+  /**
+   * handle selection
+   * @param {?boolean=} notify (defaults to true)
+   */
+  unSelectAll(doc, notify) {
+    this.getSelected(doc).forEach((element) => {
+      this.unSelect(element, notify);
+    });
+  }
 
 
   /**
@@ -188,8 +201,8 @@ class RszSelection {
    */
   toggleSelect(element, notify) {
     element.classList.toggle('rsz-selected');
-    if(notify !== false && this.onSelect) {
-      this.onSelect();
+    if(notify !== false && this.onChanged) {
+      this.onChanged();
     }
   }
 }
