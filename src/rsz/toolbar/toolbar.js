@@ -64,6 +64,12 @@ class Toolbar {
 
 
     /**
+     * @type {Element}
+     */
+    this.clearFormattingElement = this.element.querySelector('.clear-formatting');
+
+
+    /**
      * @type {Array.<Element>}
      */
     this.selection = [];
@@ -81,6 +87,14 @@ class Toolbar {
      * @type {function()|null}
      */
     this.onSave = null;
+
+
+    /**
+     * callback for the app to be notified that the user wants to clear the formatting
+     * of the current selection
+     * @type {function(Element)|null}
+     */
+    this.onClearFormatting = null;
 
 
     /**
@@ -121,6 +135,11 @@ class Toolbar {
     if(element.classList.contains('save')) {
       if (this.onSave) {
         this.onSave();
+      }
+    }
+    if(element.classList.contains('clear-formatting')) {
+      if (this.onClearFormatting) {
+        this.selection.forEach((element) => this.onClearFormatting(element));
       }
     }
     else if(element.classList.contains('mobile')) {
@@ -178,6 +197,11 @@ class Toolbar {
    * @export
    */
   redraw() {
-    // if (this.selection && this.selection.length>0) {
+    if (this.selection && this.selection.length>0) {
+      this.clearFormattingElement.classList.remove('off');
+    }
+    else {
+      this.clearFormattingElement.classList.add('off');
+    }
   }
 }

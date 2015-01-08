@@ -48,19 +48,23 @@ class App {
      */
     this.fileService= new FileService();
 
-
+    // **
     // bind components together
+    // toolbar
     this.toolbar.onSize = (w, h) => this.stage.setSize(w, h);
     this.toolbar.onOpen = () => this.fileService.open().then((url) => this.onOpen(url));
+    this.toolbar.onClearFormatting = (element) => this.responsizer.clearFormatting(element, this.stage.getSize().width);
     this.toolbar.onSave = () => this.fileService.save(
 			this.wysiwyg.getCleanHtml()).then(() => this.onSave());
+
     // selection
     this.wysiwyg.selectFilter = (element) => {return this.isBootstrapCol(element)};
     this.wysiwyg.onSelect = () => {
       this.toolbar.setSelection(this.wysiwyg.getSelected());
       this.toolbar.setDirty(true);
     };
-    // resize
+
+    // wysiwyg
     this.wysiwyg.filterBoundingBox = (element, rect) => {
       this.toolbar.setDirty(true);
       this.responsizer.setWidth(
@@ -78,7 +82,7 @@ class App {
     this.wysiwyg.setResizeMode(true);
     this.toolbar.setDevice(Device.desktop);
 
-    // iframe / wysiwyg style sheet
+    // add wysiwyg style sheet in the iframe
     this.wysiwyg.addTempStyle(window.location.href + 'iframe.css');
  }
 
@@ -121,6 +125,7 @@ class App {
    */
   onOpen(url) {
     this.stage.setUrl(url).then((doc) => {
+      this.responsizer.importSilex(doc, this.stage.getSize().width);
       this.wysiwyg.setDocument(doc);
       this.toolbar.setSelection([]);
     });

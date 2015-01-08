@@ -90,6 +90,8 @@
       background-image: url('assets/open.png'); }
     .toolbar .button.save {
       background-image: url('assets/save.png'); }
+    .toolbar .button.clear-formatting {
+      background-image: url('assets/clear-formatting.png'); }
     .toolbar .button.off {
       opacity: .5; }
   .toolbar .move-element {

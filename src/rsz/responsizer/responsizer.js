@@ -17,54 +17,101 @@ class Responsizer {
    * convert silex website to responsive
    * add bootstrap when needed
    */
-  convert(doc){
-    /*
-    // find the body
-    let parent = element;
-    while(parent && parent.parentNode && parent.tagName.toLowerCase() !== 'html') {
-      parent = parent.parentNode;
-    }
-    if (parent && parent.tagName.toLowerCase() === 'html') {
-      let style = parent.querySelector('head style#responsize-styles');
-      console.log('init', parent, style);
+  importSilex(doc, windowWidth){
+    var generator = doc.querySelector('meta[content~=Silex]');
+    if (generator) {
+      let style = doc.querySelector('head style#responsize-style');
+      console.log('importSilex', style);
       if(style === null) {
-        document.
+        let link = doc.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css';
+        link.media="(max-width: 1024px)";
+        doc.head.appendChild(link);
+
+        let script = doc.createElement('script');
+        script.src = 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js';
+        doc.head.appendChild(script);
+
+        let style = doc.createElement('style');
+        style.innerHTML = '\
+          @media (max-width: 1024px) {\
+            .bg{\
+              opacity: 1 !important;\
+            }\
+            body, .container .editable-style{\
+              position: relative;\
+              max-width: 100%;\
+              top: auto;\
+              left: auto;\
+              height: auto;\
+              top: initial;\
+              left: initial;\
+              height: initial;\
+              margin: 0;\
+              padding: 0;\
+            }\
+            .container .editable-style .silex-element-content{\
+              height: auto !important;\
+              height: initial !important;\
+            }\
+            .container .element-5, body, .container .element-6{\
+              width: 100%;\
+            }\
+          }\
+        '
+        style.id = 'responsize-style';
+        doc.head.appendChild(style);
+
+        // compute the size of a column
+        let colWidth = Math.round(windowWidth / 12);
+        let elements = [];
+        let editableElements = doc.querySelectorAll('.editable-style');
+        for(let idx=0; idx<editableElements.length; idx++) {
+          let element = editableElements[idx];
+          // get the element bounding box
+          let elementRect = element.getBoundingClientRect();
+
+          // compute the element width
+          let width = elementRect.right - elementRect.left;
+
+          // get the container bounding box
+          let parentRect = element.parentNode.getBoundingClientRect();
+
+          // compute the width in term of columns
+          let numCol = Math.max(1, Math.round(width / colWidth));
+          numCol = Math.min(12, numCol);
+
+          elements.push({
+              element: element,
+              numCol: numCol
+          });
+        }
+        console.log('importSilex elements', elements);
+        for(let idx in elements){
+          let elementObj = elements[idx];
+          if(!elementObj.element.classList.contains('background')) {
+      /*
+            elementObj.element.classList.add('col-xs-' + Math.max(1, Math.round(elementObj.numCol/4)));
+            elementObj.element.classList.add('col-sm-' + Math.max(1, Math.round(elementObj.numCol/2)));
+            elementObj.element.classList.add('col-md-' + Math.max(1, Math.round(elementObj.numCol)));
+    */
+  /*
+            elementObj.element.classList.add('col-sm-' + elementObj.numCol);
+            elementObj.element.classList.add('col-md-' + Math.max(1, Math.round(elementObj.numCol/2)));
+            elementObj.element.classList.add('col-xs-' + Math.min(12, elementObj.numCol*2));
+  */
+            elementObj.element.classList.add('col-md-' + elementObj.numCol);
+          }
+          if(elementObj.element.classList.contains('container-element') &&
+              elementObj.element.tagName.toLowerCase() !== 'body') {
+            elementObj.element.classList.add('row');
+          }
+        }
+        doc.body.classList.add('container');
       }
     }
-    */
-    // FIXME: do this only for silex sites
-    // and call this.responsize for each silex-editable element
-    let style = doc.querySelector('head style#responsize-style');
-    if(style === null) {
-      let style = doc.createElement('style');
-      style.innerHTML = '\
-        .rsz-responsized, .rsz-responsized * {\
-          position: relative !important;\
-          max-width: 100% !important;\
-          top: auto !important;\
-          left: auto !important;\
-          width: auto !important;\
-          height: auto !important;\
-          top: initial !important;\
-          left: initial !important;\
-          width: initial !important;\
-          height: initial !important;\
-          margin: 0 !important;\
-          padding: 0 !important;\
-        }\
-      ';
-      style.id = 'responsize-style';
-      doc.head.appendChild(style);
-
-      let link = doc.createElement('link');
-      link.rel = 'stylesheet';
-      link.href = 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css';
-      doc.head.appendChild(link);
-
-      let script = doc.createElement('script');
-      script.src = 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js';
-      doc.head.appendChild(script);
-    }
+    console.log('importSilex done', doc.body);
   }
 
 
@@ -85,67 +132,63 @@ class Responsizer {
 
 
   /**
-   * responsize an element
-   * @param {Array.<Element>} elements
-   */
-  responsize(elements) {
-    console.log('responsize', elements);
-    // loop on the selection
-    elements.forEach((element) => {
-      element.classList.toggle('rsz-responsized');
-    });
-    var totalWidth = window.innerWidth;
-    var colWidth = Math.round(totalWidth / 12);
-    elements.forEach((container) => {
-      var all = container.querySelectorAll('*');
-      for(let idx=0; idx<all.length; idx++){
-        let element = all[idx];
-        console.log('aaa', element);
-        if (this.hasSiblings(element)) {
-          var numCol = Math.max(1, Math.round(element.offsetWidth / colWidth));
-          element.classList.add('col-sm-' + numCol);
-          element.classList.add('col-md-' + Math.max(1, Math.round(numCol/2)));
-          element.classList.add('col-xs-' + Math.min(12, numCol*2));
-        }
-        console.log('bbb', element);
-      }
-    });
-  }
-
-
-  /**
-   * set a size to an element using bootstrap classes
+   * remove bootstrap classes from the element
    * @param {Element} element
-   * @param {number} width
-   * @param {number} screenWidth
+   * @param {number} containerWidth
    */
-  setWidth(element, width, screenWidth) {
-    // get the container bounding box
-    let parentRect = element.parentNode.getBoundingClientRect();
-
-    // compute the size of a column
-    var totalWidth = parentRect.right - parentRect.left;
-    var colWidth = Math.round(totalWidth / 12);
-
-    // compute the width in term of columns
-    var numCol = Math.max(1, Math.round(width / colWidth));
-
-    // compute bootstrap prefix
-    let prefix = 'col-xs-';
-    if(screenWidth >= 1200) {
-      prefix = 'col-lg-';
-    }
-    else if(screenWidth >= 992) {
-      prefix = 'col-md-';
-    }
-    else if(screenWidth >= 768) {
-      prefix = 'col-sm-';
-    }
+  clearFormatting(element, containerWidth) {
+    // retrieve bootstrap prefix for the given width
+    let prefix = this.getPrefix(containerWidth);
 
     // remove all bootstrap classes for the given screen size
     for (let idx=1; idx<=12; idx++) {
       element.classList.remove(prefix + idx);
     }
+  }
+
+
+  /**
+   * @param {number} containerWidth
+   * @returns {string} the bootstrap prefix corresponding to the containerWidth
+   */
+  getPrefix(containerWidth) {
+    // compute bootstrap prefix
+    let prefix = 'col-xs-';
+    if(containerWidth >= 1200) {
+      prefix = 'col-lg-';
+    }
+    else if(containerWidth >= 992) {
+      prefix = 'col-md-';
+    }
+    else if(containerWidth >= 768) {
+      prefix = 'col-sm-';
+    }
+    return prefix;
+  }
+
+  /**
+   * set a size to an element using bootstrap classes
+   * @param {Element} element
+   * @param {number} width
+   * @param {number} containerWidth
+   */
+  setWidth(element, width, containerWidth) {
+    // get the container bounding box
+    let parentRect = element.parentNode.getBoundingClientRect();
+
+    // compute the size of a column
+    let totalWidth = parentRect.right - parentRect.left;
+    let colWidth = Math.round(totalWidth / 12);
+
+    // compute the width in term of columns
+    let numCol = Math.max(1, Math.round(width / colWidth));
+    numCol = Math.min(12, numCol);
+
+    // remove all bootstrap classes for the given screen size
+    this.clearFormatting(element, containerWidth);
+
+    // retrieve bootstrap prefix for the given width
+    let prefix = this.getPrefix(containerWidth);
 
     // apply the new bootstrap class
     element.classList.add(prefix + numCol);
