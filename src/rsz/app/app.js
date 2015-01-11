@@ -46,7 +46,8 @@ class App {
     /**
      * @type {FileService}
      */
-    this.fileService= new FileService();
+    this.fileService = new FileService();
+
 
     // **
     // bind components together

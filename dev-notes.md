@@ -1,28 +1,44 @@
 
 ## en cours
 
-features
 
+addBootstrapCols before preventAbsoluteLayout?
+drag/drop offset
+
+to do responsize App
+
+* row on/off
+* col on/off
+* container on/off
+* step by step importer
+
+  * [absolute websites only] reorder dom
+  * [absolute websites only] convert layout to absolute (starting from a screen width)
+  * [non bootstrap] add bootstrap scripts and styles
+  * [non bootstrap] add bootstrap rows
+  * [non bootstrap] add bootstrap col-*-* (at given screen widths)
+    should be recursive, take container width, not window width
+  * handle changes on already imported sites
+
+* font sizes +/-
 * open CE at start
 * allow only html page for CE
-* notify and insert bootstrap script
-* resize with bootstrap classes
+* x resize with bootstrap classes
 * move with bootstrap classes (offset) and then move in the dom
 
 Stage, to be added
 
-* prevent links
-* prevent scripts
+* x prevent links
+* prevent scripts but not bootstrap
 * Disable horizontal scrolling for Back page on Mac OS
 
 Wysiwyg to be added
 
 * unselect when escape key or click on the container or outside
 * handle mouse move and mouse up over the UI / outside the iframe
-* add / remove elements
-* double click
-* drag, drop, resize
-* dragDropMode: positioned/absolute
+* add / remove elements (show / hide in case of bootstrap)
+* drag / drop (dragDropMode: positioned/absolute)
+* x resize
 
 Readme
 
@@ -31,11 +47,9 @@ Readme
 
 Other components
 
-* copy paste
 * undo redo
 
-
-todo responsize
+## todo responsize
 
 * responsize as bootstrap editor
   * display the cols of selected element + resize with mouse, same for offset, same for gutter size

@@ -22,7 +22,7 @@ var DeviceData = [
   {name: 'mobile-h', width: 476, height: 320}, // xs
   {name: 'tablet', width: 769, height: 1024}, // sm (769 not 768 because website need to display the sm version)
   {name: 'tablet-h', width: 1024, height: 769}, // md
-  {name: 'desktop', width: 1280, height: 800}, // lg
+  {name: 'desktop', width: 1920, height: 1080}, // lg
 ]
 
 
