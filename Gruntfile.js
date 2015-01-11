@@ -15,7 +15,12 @@ module.exports = function(grunt) {
   // tasks
   grunt.registerTask('default', ['build']);
   grunt.registerTask('build', ['bower', 'jade', 'sass', 'closureCompiler', 'append-sourcemapping']);
-  grunt.loadNpmTasks('grunt-append-sourcemapping');
+
+  grunt.registerTask('append-sourcemapping', 'append sourcemap to debug.html', function() {
+    var content = grunt.file.read('dist/responsize.js');
+    content += '//# sourceMappingURL=/responsize.js.map';
+    grunt.file.write('dist/responsize.js', content);
+  });
 
   grunt.initConfig({
     sass: {
@@ -58,13 +63,6 @@ module.exports = function(grunt) {
         options: {
           targetDir: 'dist/lib',
           copy: true
-        }
-      }
-    },
-    "append-sourcemapping": {
-      main: {
-        files: {
-          "dist/responsize.js": "responsize.js.map"
         }
       }
     },

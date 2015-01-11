@@ -61,7 +61,7 @@ options.staticFolders.push(
     },
     // debug silex, for js source map
     {
-        name: '/js/src',
+        name: '/src',
         path: __dirname + '/src'
     }
 );
