@@ -1,12 +1,15 @@
 
 ## en cours
 
+cf emails
 
+pouvoir désigner les rows (mode ou on peut tout select + fil d ariane, et avec un sous menu avec case a cocher "si horizontal row")
 addBootstrapCols before preventAbsoluteLayout?
 drag/drop offset
 
 to do responsize App
 
+* custom css for the current width
 * row on/off
 * col on/off
 * container on/off

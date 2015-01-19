@@ -9,7 +9,7 @@ var Device = {
   mobileH: 1,
   tablet: 2,
   tabletH: 3,
-  desktop: 4
+  desktop: 4,
 };
 
 
@@ -19,11 +19,11 @@ var Device = {
  */
 var DeviceData = [
   {name: 'mobile', width: 320, height: 480}, // bootstrap xs
-  {name: 'mobile-h', width: 476, height: 320}, // xs
+  {name: 'mobile-h', width: 480, height: 320}, // xs
   {name: 'tablet', width: 769, height: 1024}, // sm (769 not 768 because website need to display the sm version)
   {name: 'tablet-h', width: 1024, height: 769}, // md
   {name: 'desktop', width: 1920, height: 1080}, // lg
-]
+];
 
 
 /**
@@ -131,6 +131,8 @@ class Toolbar {
       if (this.onOpen) {
         this.onOpen();
       }
+      // remove the tooltip
+      this.element.querySelector('.tooltip.open').classList.remove('visible');
     }
     if(element.classList.contains('save')) {
       if (this.onSave) {

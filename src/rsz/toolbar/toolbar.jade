@@ -1,11 +1,14 @@
 #toolbar.toolbar
   ul
-    li.device.desktop
-    li.device.tablet-h
-    li.device.tablet
-    li.device.mobile-h
-    li.device.mobile
-  .button.open
-  .button.save.off
-  .button.clear-formatting.off
-
+    li.device.desktop(title="1920 x 1080")
+    li.device.tablet-h(title="1024 x 769")
+    li.device.tablet(title="769 x 1024")
+    li.device.mobile-h(title="480 x 320")
+    li.device.mobile(title="320 x 480")
+  .button.open(title="Open a web page")
+  .tooltip.open.visible
+    img.callout-img(src="assets/tooltip-callout.gif")
+    h1 Open a web page
+    span Start by opening a web page, from your Dropbox or FTP account.
+  .button.save.off(title="Save")
+  .button.clear-formatting.off(title="Clear formatting")

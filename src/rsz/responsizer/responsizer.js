@@ -85,7 +85,6 @@ class Responsizer {
 
         // do the comparison and check if the order is right
         if(isCurrentOnTop || (doOverlapVertically && isCurrentOnLeft)) {
-          console.log('swap', currentRect, prevRect);
           // swap positions
           opt_container.insertBefore(currentElement, prevElement);
           let tmp = elements[idx-1];
@@ -112,14 +111,10 @@ class Responsizer {
    */
   preventAbsoluteLayout(doc) {
     let style = doc.querySelector('head style#responsize-style');
-    console.log('importSilex', style);
     if(style === null) {
       let style = doc.createElement('style');
       style.innerHTML = '\
         @media (max-width: 1024px) {\
-          .bg{\
-            opacity: 1 !important;\
-          }\
           body, .container .editable-style{\
             position: relative;\
             max-width: 100%;\
@@ -129,17 +124,17 @@ class Responsizer {
             top: initial;\
             left: initial;\
             height: initial;\
-            padding: 0;\
+            box-sizing: inherit;\
           }\
           .container .editable-style::before{\
             content: "\\00A0";\
           }\
           .container .editable-style .silex-element-content{\
-            height: auto !important;\
-            height: initial !important;\
+            height: auto;\
+            height: initial;\
           }\
           body {\
-            width: 100% !important;\
+            width: 100%;\
           }\
         }\
       ';
@@ -165,7 +160,6 @@ class Responsizer {
    */
   addBootstrapRows(container){
     let rows = container.querySelectorAll('.container-element');
-    console.log('addBootstrapContainer', rows);
     for(let idx=0; idx<rows.length; idx++) {
       let element = rows[idx];
       element.classList.add('row');
@@ -182,7 +176,6 @@ class Responsizer {
   addBootstrapCols(container){
     // browse all rows
     let rows = container.querySelectorAll('.row');
-    console.log('addBootstrapCols', rows);
     for(let idx=0; idx<rows.length; idx++) {
       let row = rows[idx];
 
@@ -222,7 +215,6 @@ class Responsizer {
         sm: 0,
         xs: 0
       };
-try {
       for(let idx in elements){
         let elementObj = elements[idx];
 
@@ -247,10 +239,6 @@ try {
         sumWidth.sm += sm + smOffset;
         sumWidth.xs += xs + xsOffset;
       }
-}
-catch(e){
-  console.log('Error', e);
-}
     }
   }
 
@@ -263,7 +251,6 @@ catch(e){
     // add bootstrap CSS
     let bootstrapCss = doc.querySelector('link[href*=bootstrap]');
     if(bootstrapCss === null) {
-      console.log('addBootstrapImports add style');
       let link = doc.createElement('link');
       link.rel = 'stylesheet';
       link.href = 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css';
@@ -274,7 +261,6 @@ catch(e){
     // add bootstrap JS
     let bootstrapJs = doc.querySelector('script[src*=bootstrap]');
     if(bootstrapJs === null) {
-      console.log('addBootstrapImports add script');
       let script = doc.createElement('script');
       script.src = 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js';
       doc.head.appendChild(script);

@@ -31,7 +31,7 @@ class RszResize {
      * size of the resize handle
      * @type {number}
      */
-    this.RESIZE_HANDLE_SIZE = 5;
+    this.RESIZE_HANDLE_SIZE = 15;
 
 
     /**
