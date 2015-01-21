@@ -440,5 +440,14 @@ class Wysiwyg {
   getSelected() {
     return this.rszSelection.getSelected(this.document);
   }
+  
+  /**
+   * handle selection
+   * @param {Element} node
+   * @export
+   */
+  setSelected( node ) {
+    return this.rszSelection.select(node, this.document);
+  }
 }
 
