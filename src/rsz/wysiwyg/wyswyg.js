@@ -447,6 +447,7 @@ class Wysiwyg {
    * @export
    */
   setSelected( node ) {
+    this.rszSelection.unSelectAll(this.document);
     return this.rszSelection.select(node, this.document);
   }
 }
