@@ -248,7 +248,7 @@ class Wysiwyg {
     while(best && this.selectFilter && !this.selectFilter(best)) {
       best = /** @type {Element} */ (best.parentNode);
     }
-    return best || target;
+    return best;
   }
 
 
@@ -328,35 +328,40 @@ class Wysiwyg {
    */
   onMouseUp(e) {
     if (this.document) {
-      /** @type {Element} */
+      /** @type {Element|null} */
       let bestElement = this.getBestElement(/** @type {Element} */ (e.target));
 
-      // handle selection
-      if (this.selectionMode) {
-        var selectionChanged = this.rszSelection.onMouseUp(
-          this.document,
-          this.getBestElement(/** @type {Element} */ (e.target)),
-          e.clientX,
-          e.clientY,
-          e.shiftKey
-        );
-        if (selectionChanged && this.onSelect) {
-          this.onSelect();
+      if (bestElement) {
+        // handle selection
+        if (this.selectionMode) {
+          var selectionChanged = this.rszSelection.onMouseUp(
+            this.document,
+            bestElement,
+            e.clientX,
+            e.clientY,
+            e.shiftKey
+          );
+          if (selectionChanged && this.onSelect) {
+            this.onSelect();
+          }
+        }
+
+        // handle resize
+        if (this.resizeMode) {
+          var sizeChanged = this.rszResize.onMouseUp(
+            this.document,
+            bestElement,
+            e.clientX,
+            e.clientY,
+            e.shiftKey
+          );
+          if(this.onResized && sizeChanged) {
+            this.onResized();
+          }
         }
       }
-
-      // handle resize
-      if (this.resizeMode) {
-        var sizeChanged = this.rszResize.onMouseUp(
-          this.document,
-          bestElement,
-          e.clientX,
-          e.clientY,
-          e.shiftKey
-        );
-        if(this.onResized && sizeChanged) {
-          this.onResized();
-        }
+      else {
+        this.rszSelection.unSelectAll(this.document);
       }
     }
   }
@@ -368,27 +373,30 @@ class Wysiwyg {
    */
   onMouseDown(e) {
     if (this.document) {
-      /** @type {Element} */
+      /** @type {Element|null} */
       let bestElement = this.getBestElement(/** @type {Element} */ (e.target));
-      // handle selection
-      if (this.selectionMode) {
-        this.rszSelection.onMouseDown(
-          this.document,
-          bestElement,
-          e.clientX,
-          e.clientY,
-          e.shiftKey
-        );
-      }
-      // handle resize
-      if (this.resizeMode) {
-        this.rszResize.onMouseDown(
-          this.document,
-          bestElement,
-          e.clientX,
-          e.clientY,
-          e.shiftKey
-        );
+
+      if (bestElement) {
+        // handle selection
+        if (this.selectionMode) {
+          this.rszSelection.onMouseDown(
+            this.document,
+            bestElement,
+            e.clientX,
+            e.clientY,
+            e.shiftKey
+          );
+        }
+        // handle resize
+        if (this.resizeMode) {
+          this.rszResize.onMouseDown(
+            this.document,
+            bestElement,
+            e.clientX,
+            e.clientY,
+            e.shiftKey
+          );
+        }
       }
     }
   }
@@ -402,31 +410,38 @@ class Wysiwyg {
     if (this.document) {
       let hasChanged = false;
 
-      /** @type {Element} */
+      /** @type {Element|null} */
       let bestElement = this.getBestElement(/** @type {Element} */ (e.target));
-      // handle selection
-      if (this.selectionMode) {
-        hasChanged = hasChanged || this.rszSelection.onMouseMove(
-          this.document,
-          bestElement,
-          e.clientX,
-          e.clientY,
-          e.shiftKey
-        );
+
+      if (bestElement) {
+        // handle selection
+        if (this.selectionMode) {
+          hasChanged = hasChanged || this.rszSelection.onMouseMove(
+            this.document,
+            bestElement,
+            e.clientX,
+            e.clientY,
+            e.shiftKey
+          );
+        }
+        // handle resize
+        if (this.resizeMode) {
+          hasChanged = hasChanged || this.rszResize.onMouseMove(
+            this.document,
+            bestElement,
+            e.clientX,
+            e.clientY,
+            e.shiftKey,
+            this.filterBoundingBox
+          );
+        }
+        if(hasChanged) {
+          this.preventDefault(e);
+        }
       }
-      // handle resize
-      if (this.resizeMode) {
-        hasChanged = hasChanged || this.rszResize.onMouseMove(
-          this.document,
-          bestElement,
-          e.clientX,
-          e.clientY,
-          e.shiftKey,
-          this.filterBoundingBox
-        );
-      }
-      if(hasChanged) {
-        this.preventDefault(e);
+      else {
+        this.rszResize.updateCursor(this.document, rsz.wysiwyg.Side.NONE);
+        this.rszSelection.resetCandidates(this.document);
       }
     }
   }

@@ -76,10 +76,7 @@ class RszSelection {
     }
     else {
       // reset all candidates
-      var candidates = doc.querySelectorAll('.rsz-select-candidate');
-      for (let idx=0; idx<candidates.length; idx++) {
-        candidates[idx].classList.remove('rsz-select-candidate');
-      }
+      this.resetCandidates(doc);
 
       // new candidate
       target.classList.add('rsz-select-candidate');
@@ -144,7 +141,19 @@ class RszSelection {
   }
 
 
-   /**
+  /**
+   * reset hover effect
+   * @param {HTMLDocument} doc
+   */
+  resetCandidates(doc) {
+    var candidates = doc.querySelectorAll('.rsz-select-candidate');
+    for (let idx=0; idx<candidates.length; idx++) {
+      candidates[idx].classList.remove('rsz-select-candidate');
+    }
+  }
+
+
+  /**
    * handle selection
    * @param {Element} element
    */
