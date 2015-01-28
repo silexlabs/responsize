@@ -1,7 +1,30 @@
 
+conversion site silex d'absolute à positionné
+$('.editable-style.text-element, .editable-style.text-element .silex-element-content').each(function(){
+    this.style.height = 'auto';
+})
+$('.editable-style').each(function(){
+    this.style.display = 'inline-block';
+    var x =  $(this).offset().left;
+    var y =  $(this).offset().top;
+    $(this).css({position: 'relative'});
+    $(this).offset({ top: y, left: x });
+})
+
+
+http://www.catswhocode.com/blog/making-a-website-responsive-in-3-easy-steps
+http://webdesignerwall.com/tutorials/responsive-design-in-3-steps
+http://webdesignerwall.com/tutorials/5-useful-css-tricks-for-responsive-design
+
+
+Sites silex en responsive, dans responsize ou dans silex?
+- reorder dom
+- height => min-height
+- flow: left
+- clear: both
+
 ## en cours
 
-cf emails
 
 pouvoir désigner les rows (mode ou on peut tout select + fil d ariane, et avec un sous menu avec case a cocher "si horizontal row")
 addBootstrapCols before preventAbsoluteLayout?
