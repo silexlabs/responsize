@@ -85,7 +85,17 @@ class Stage {
    */
   getContentSize() {
     let box = {left: null, right: null, top: null, bottom: null};
-    let elements = this.iframe.contentDocument.querySelectorAll('*');
+    let elements = null;
+    try {
+      elements = this.iframe.contentDocument.querySelectorAll('*');
+    }
+    catch(e) {
+      console.error('Could not acces the iframe content, probably due to a cross domain issue.');
+      return {
+        w: 800,
+        h: 600
+      };
+    }
     for (let idx = 0; idx<elements.length; idx++) {
       let element = elements[idx];
       if (box.left === null || element.offsetLeft < box.left) {
@@ -187,7 +197,13 @@ class Stage {
         this.redraw();
 
         // resolve the promise
-        resolve(this.iframe.contentDocument);
+        try {
+          resolve(this.iframe.contentDocument);
+        }
+        catch(e) {
+          console.error('Could not acces the iframe content, probably due to a cross domain issue.');
+          resolve(null);
+        }
       }
       this.iframe.onerror = (e) => {
         // loading ended
@@ -203,11 +219,17 @@ class Stage {
 
 
   /**
-   * @return {string}
+   * @return {string|null}
    * @export
    */
   getHtml() {
-    return this.iframe.contentDocument.documentElement.outerHTML;
+    try {
+      return this.iframe.contentDocument.documentElement.outerHTML;
+    }
+    catch(e) {
+      console.error('Could not acces the iframe content, probably due to a cross domain issue.');
+      return null;
+    }
   }
 
 
@@ -230,14 +252,25 @@ class Stage {
         if(html !== '') {
           // only if the html is not "blank"
           this.iframe.src = '';
-          this.iframe.contentDocument.write(html);
+          try {
+            this.iframe.contentDocument.write(html);
+          }
+          catch(e) {
+            console.error('Could not acces the iframe content, probably due to a cross domain issue.');
+          }
         }
 
         // resize and refresh view
         this.redraw();
 
         // resolve the promise
-        resolve(this.iframe.contentDocument);
+        try {
+          resolve(this.iframe.contentDocument);
+        }
+        catch(e) {
+          console.error('Could not acces the iframe content, probably due to a cross domain issue.');
+          resolve(null);
+        }
       };
       this.iframe.onerror = (e) => {
         // loading ended

@@ -19,7 +19,6 @@ window['initResponsizeApp'] = function initResponsizeApp() {
 
 window.onerror = function(message, url, lineNumber) {
   window['ga']('send', 'Uncaught error', message, url, lineNumber);
-  return true;
 };
 
 

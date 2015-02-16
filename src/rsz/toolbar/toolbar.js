@@ -58,14 +58,14 @@ class Toolbar {
 
 
     /**
-     * @type {Element}
-     */
+     * type {Element}
+     *
     this.saveElement = this.element.querySelector('.save');
 
 
     /**
-     * @type {Element}
-     */
+     * type {Element}
+     *
     this.clearFormattingElement = this.element.querySelector('.clear-formatting');
 
 
@@ -113,12 +113,14 @@ class Toolbar {
    * the current file has been modified but changes are not saved
    */
   setDirty(isDirty) {
+    /*
     if(isDirty) {
       this.saveElement.classList.remove('off');
     }
     else {
       this.saveElement.classList.add('off');
     }
+    */
   }
 
 
@@ -190,8 +192,11 @@ class Toolbar {
    * @export
    */
   setSelection(elements) {
+    console.log('setSelection');
     this.selection = elements;
     this.redraw();
+    // remove the tooltip
+    this.element.querySelector('.tooltip.open').classList.remove('visible');
   }
 
   /**
@@ -199,11 +204,13 @@ class Toolbar {
    * @export
    */
   redraw() {
+    /*
     if (this.selection && this.selection.length>0) {
       this.clearFormattingElement.classList.remove('off');
     }
     else {
       this.clearFormattingElement.classList.add('off');
     }
+    */
   }
 }
