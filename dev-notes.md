@@ -1,3 +1,6 @@
+utiliser responsize uniquement pour visualiser les sites silex et BN?
+
+technique de wix = viewport avec taille fixe
 
 conversion site silex d'absolute à positionné
 $('.editable-style.text-element, .editable-style.text-element .silex-element-content').each(function(){
@@ -10,6 +13,28 @@ $('.editable-style').each(function(){
     $(this).css({position: 'relative'});
     $(this).offset({ top: y, left: x });
 })
+
+
+tests lex
+    viewport wix :
+    <meta name="viewport" content="width=320, user-scalable=no, maximum-scale=2.2">
+
+    .editable-style{
+      max-width: 100%;
+    }
+    .editable-style .silex-element-content{
+      max-width: 100%;
+    }
+    .normal{
+      max-width: 100%;
+    }
+    body {
+      width: 320px;
+    }
+    img{ /* ancienne version silex */
+      width: inherit !important;
+      height: inherit !important;
+    }
 
 
 http://www.catswhocode.com/blog/making-a-website-responsive-in-3-easy-steps
