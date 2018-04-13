@@ -44,16 +44,23 @@ class App {
 
 
     /**
-     * @type {FileService}
+     * last opened URL
+     * @type {string}
      */
-    this.fileService = new FileService();
+    this.url = '';
 
 
     // **
     // bind components together
     // toolbar
     this.toolbar.onSize = (w, h) => this.stage.setSize(w, h);
-    this.toolbar.onOpen = () => this.fileService.open().then((url) => this.onOpen(url));
+    this.toolbar.onOpen = () => {
+      const url = prompt("Website URL", this.url);
+      if(url) {
+        // TODO: use `this.onOpen(url);` to open the website and the history API to update the GET param `url` 
+        window.location.href = '?url=' + escape(url);
+      }
+    };
 /*
     this.toolbar.onClearFormatting = (element) => this.responsizer.clearFormatting(element, this.stage.getSize().width);
     this.toolbar.onSave = () => this.fileService.save(
@@ -126,6 +133,7 @@ class App {
    * @param {string} url
    */
   onOpen(url) {
+    this.url = url;
     this.stage.setUrl(url).then((doc) => {
       //this.responsizer.importSilex(doc, this.stage.getSize().width);
       //this.wysiwyg.setDocument(doc);

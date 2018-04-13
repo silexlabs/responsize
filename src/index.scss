@@ -8,7 +8,7 @@
   top: 0;
   right: 0;
   border: 0;
-  z-index: 1;
+  z-index: 101; /* above the loading div */
 }
 body {
   overflow: hidden;

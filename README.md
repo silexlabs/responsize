@@ -95,13 +95,13 @@ Requirements
 $ npm install
 $ bower install
 $ grunt build
-$ node unifile-server.js
+$ npm start
 ```
 
 # Develop
 
 ```
-$ node unifile-server.js
+$ npm start
 $ grunt watch
 ```
 

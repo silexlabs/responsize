@@ -7,9 +7,6 @@ html(lang='en')
     meta(name='viewport', content='width=device-width, initial-scale=1')
     meta(http-equiv='X-UA-Compatible', content='IE=edge')
 
-    // cloud explorer imports
-    script(src="lib/bower-cloud-explorer/app/scripts/cloud-explorer.js")
-
     // responsize imports
     script(src='responsize.js')
     link(href='responsize.css', rel='stylesheet')
@@ -28,11 +25,6 @@ html(lang='en')
       iframe(src="//www.googletagmanager.com/ns.html?id=GTM-5T2LW2", height="0", width="0", style="display:none;visibility:hidden")
     script.
       (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5T2LW2');</script>
-
-    // ce iframe
-    iframe(id="ce-js", frameborder="no", scrolling="no", allowfullscreen="yes",
-      data-ce-unifile-url="/api/1.0/"
-      data-ce-path="./lib/bower-cloud-explorer/app/")
 
     // container for Responsize app
     rsz-app#rsz-app
