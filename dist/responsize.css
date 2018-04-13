@@ -37,8 +37,8 @@ body {
   right: 0;
   bottom: 0;
   position: absolute;
-  background-color: #f38a47;
-  background-image: url('assets/responsize-small.png');
+  background-color: #F38A47;
+  background-image: url("assets/responsize-small.png");
   overflow: hidden; }
   .stage.rsz-loading .loader {
     display: block; }
@@ -64,9 +64,9 @@ body {
   .stage iframe {
     box-shadow: 0 0 5px #313131;
     position: relative;
-    transition: width .5s, top .5s, left .5s, height .5s, transform .5s;
-    -webkit-transition: width .5s, top .5s, left .5s, height .5s, transform .5s;
-    -moz-transition: width .5s, top .5s, left .5s, height .5s, transform .5s;
+    transition: width 0.5s, top 0.5s, left 0.5s, height 0.5s, transform 0.5s;
+    -webkit-transition: width 0.5s, top 0.5s, left 0.5s, height 0.5s, transform 0.5s;
+    -moz-transition: width 0.5s, top 0.5s, left 0.5s, height 0.5s, transform 0.5s;
     background-color: rgba(255, 255, 255, 0.25); }
 
 .toolbar {
@@ -76,7 +76,7 @@ body {
   .toolbar ul {
     padding: 0;
     margin: 0;
-    border-right-color: #808080;
+    border-right-color: grey;
     border-right-style: inset;
     border-right-width: 1px;
     display: inline-block; }
@@ -97,15 +97,15 @@ body {
     -webkit-filter: drop-shadow(0 0 17px rgba(255, 255, 255, 0.8));
     opacity: 1; }
   .toolbar .mobile {
-    background-image: url('assets/iphone-blanc.png'); }
+    background-image: url("assets/iphone-blanc.png"); }
   .toolbar .mobile-h {
-    background-image: url('assets/iphone-blanc-h.png'); }
+    background-image: url("assets/iphone-blanc-h.png"); }
   .toolbar .tablet {
-    background-image: url('assets/ipad-blanc.png'); }
+    background-image: url("assets/ipad-blanc.png"); }
   .toolbar .tablet-h {
-    background-image: url('assets/ipad-blanc-h.png'); }
+    background-image: url("assets/ipad-blanc-h.png"); }
   .toolbar .desktop {
-    background-image: url('assets/imac-blanc.png'); }
+    background-image: url("assets/imac-blanc.png"); }
   .toolbar .button {
     height: 40px;
     width: 46px;
@@ -119,11 +119,11 @@ body {
     -webkit-filter: drop-shadow(0 0 17px rgba(255, 255, 255, 0.8));
     opacity: 1; }
     .toolbar .button.open {
-      background-image: url('assets/open.png'); }
+      background-image: url("assets/open.png"); }
     .toolbar .button.save {
-      background-image: url('assets/save.png'); }
+      background-image: url("assets/save.png"); }
     .toolbar .button.clear-formatting {
-      background-image: url('assets/clear-formatting.png'); }
+      background-image: url("assets/clear-formatting.png"); }
     .toolbar .button.off {
       opacity: .5; }
   .toolbar .move-element {
@@ -136,10 +136,10 @@ body {
       background-repeat: no-repeat;
       cursor: pointer; }
     .toolbar .move-element .up {
-      background-image: url('assets/arrow-up.png');
+      background-image: url("assets/arrow-up.png");
       margin-bottom: 6px; }
     .toolbar .move-element .down {
-      background-image: url('assets/arrow-down.png'); }
+      background-image: url("assets/arrow-down.png"); }
     .toolbar .move-element .up, .toolbar .move-element .down {
       opacity: .5; }
     .toolbar .move-element .up:hover, .toolbar .move-element .down:hover {
@@ -151,3 +151,15 @@ body {
 
 #ce-js {
   z-index: 100; }
+
+.ribbon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  border: 0;
+  z-index: 1; }
+
+body {
+  overflow: hidden; }
+
+/*# sourceMappingURL=responsize.css.map */
