@@ -41,7 +41,7 @@ module.exports = function(grunt) {
         compilerOpts: {
           process_closure_primitives: '',
           generate_exports: '',
-          compilation_level: 'ADVANCED_OPTIMIZATIONS',
+          compilation_level: 'SIMPLE_OPTIMIZATIONS',
           jscomp_error: ['accessControls', 'ambiguousFunctionDecl', 'checkRegExp', 'checkTypes', 'checkVars', 'const', 'constantProperty', 'deprecated', 'duplicateMessage', 'es5Strict', 'externsValidation', 'fileoverviewTags', 'globalThis', 'internetExplorerChecks', 'invalidCasts', 'missingProperties', 'nonStandardJsDocs', 'strictModuleDepCheck', 'typeInvalidation', 'undefinedNames', 'undefinedVars', 'unknownDefines', 'uselessCode', 'visibility'],
           warning_level: 'VERBOSE',
           create_source_map: 'dist/responsize.js.map',
