@@ -2,3 +2,14 @@
 @import 'src/rsz/stage/_stage.scss';
 @import 'src/rsz/toolbar/_toolbar.scss';
 @import 'src/rsz/file-service/_file-service.scss';
+
+.ribbon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  border: 0;
+  z-index: 1;
+}
+body {
+  overflow: hidden;
+}
