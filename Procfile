@@ -1,1 +1,1 @@
-web: node unifile-server.js
+web: npm start
