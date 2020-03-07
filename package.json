@@ -2,6 +2,9 @@
   "version": "0.0.4",
   "name": "responsize",
   "description": "Copyright Silex Labs 2014. Licensed under the GPLv3 license.",
+  "engines": {
+    "node": ">=8.10.0 <=10.15.3"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/lexoyo/responsize.git"
