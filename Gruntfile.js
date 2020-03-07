@@ -1,3 +1,4 @@
+const sass = require('node-sass');
 
 module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
@@ -25,6 +26,7 @@ module.exports = function(grunt) {
   grunt.initConfig({
     sass: {
       options: {
+        implementation: sass,
         sourceMap: true
       },
       dist: {
