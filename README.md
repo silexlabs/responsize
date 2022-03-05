@@ -1,10 +1,12 @@
 # About Responsize
 
-Copyright Silex Labs 2014. Licensed under the MIT license.
+Display websites on different screen sizes in the browser. Useful to visualize how a website looks on desktop while browsing on mobile, or on big screen while browsing on a laptop.
 
 Responsize can be used as an online tool, like the [Responsize app hosted by Silex Labs](http://app.responsize.org/). See the instructions bellow to host an instance on your servers.
 
 Responsize can be used as a library, providing app developers with the individual components used in Responsize, such as the resizeable Stage component.
+
+Copyright Silex Labs 2014. Licensed under the MIT license.
 
 # Use as a library
 
