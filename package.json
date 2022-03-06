@@ -3,7 +3,7 @@
   "name": "responsize",
   "description": "Copyright Silex Labs 2014. Licensed under the GPLv3 license.",
   "engines": {
-    "node": ">=8.10.0 <=10.15.3"
+    "node": ">=8.10.0 <=10.20.1"
   },
   "repository": {
     "type": "git",
@@ -39,6 +39,7 @@
   "scripts": {
     "postinstall": "bower install",
     "start": "http-server dist",
-    "build": "grunt build"
+    "build": "grunt build",
+    "test": "echo NO TEST JUST BUILD"
   }
 }
