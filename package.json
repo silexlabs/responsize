@@ -40,6 +40,7 @@
     "postinstall": "bower install",
     "start": "http-server dist",
     "build": "grunt build",
+    "lint": "echo NO LINT JUST BUILD",
     "test": "echo NO TEST JUST BUILD"
   }
 }
