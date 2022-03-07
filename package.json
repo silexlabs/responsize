@@ -1,7 +1,7 @@
 {
   "version": "0.0.4",
   "name": "responsize",
-  "description": "Copyright Silex Labs 2014. Licensed under the GPLv3 license.",
+  "description": "Display websites on different screen sizes in the browser. Useful to visualize how a website looks on desktop while browsing on mobile, or on big screen while browsing on a laptop.",
   "engines": {
     "node": ">=8.10.0 <=10.20.1"
   },
@@ -37,6 +37,7 @@
     "node-sass": "^4.13.1"
   },
   "scripts": {
+    "release": "",
     "postinstall": "bower install",
     "start": "http-server dist",
     "build": "grunt build",
