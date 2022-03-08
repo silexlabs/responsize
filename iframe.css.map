@@ -1,0 +1,9 @@
+{
+	"version": 3,
+	"file": "iframe.css",
+	"sources": [
+		"../src/iframe.scss"
+	],
+	"names": [],
+	"mappings": "AACA,AAAA,qBAAqB,CAAC;EACpB,UAAU,EAAE,mBAAmB;EAC/B,MAAM,EAAE,OAAO,GAChB;;AAED,AAAA,aAAa,CAAC;EACZ,UAAU,EAAE,gBAAgB,GAC7B;;AAKD,AAAA,IAAI,AAAA,cAAc,CAAC,CAAC,CAAC;EACnB,MAAM,EAAE,SAAS,GAClB;;AAED,AAAA,IAAI,AAAA,cAAc,CAAC,CAAC,CAAC;EACnB,MAAM,EAAE,SAAS,GAClB"
+}
