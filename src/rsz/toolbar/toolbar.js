@@ -192,7 +192,6 @@ class Toolbar {
    * @export
    */
   setSelection(elements) {
-    console.log('setSelection');
     this.selection = elements;
     this.redraw();
     // remove the tooltip
