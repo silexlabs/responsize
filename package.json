@@ -3,7 +3,7 @@
   "name": "responsize",
   "description": "Display websites on different screen sizes in the browser. Useful to visualize how a website looks on desktop while browsing on mobile, or on big screen while browsing on a laptop.",
   "engines": {
-    "node": ">=8.10.0 <=10.20.1"
+    "node": ">=8.10.0 <=12.22.10"
   },
   "repository": {
     "type": "git",
