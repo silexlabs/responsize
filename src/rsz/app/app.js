@@ -97,8 +97,11 @@ class App {
     this.wysiwyg.setResizeMode(true);
 */
     try {
-      const device = parseInt(window.sessionStorage.getItem("rsz-device"), 10);
-      if(device) this.toolbar.setDevice(device);
+      const str = window.sessionStorage.getItem("rsz-device")
+      if(str) {
+        const device = parseInt(str, 10);
+        this.toolbar.setDevice(device);
+      }
       else this.toolbar.setDevice(Device.desktop);
     } catch(e) {
       this.toolbar.setDevice(Device.desktop);
