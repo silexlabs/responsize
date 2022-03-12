@@ -53,7 +53,11 @@ class App {
     // **
     // bind components together
     // toolbar
-    this.toolbar.onSize = (w, h) => this.stage.setSize(w, h);
+    this.toolbar.onSize = (w, h) => {
+      try { window.sessionStorage.setItem("rsz-device", this.toolbar.selectedDevice.toString()) }
+      catch(e) {}
+      this.stage.setSize(w, h);
+    }
     this.toolbar.onOpen = () => {
       const url = prompt("Website URL", this.url);
       if(url) {
@@ -92,7 +96,13 @@ class App {
     this.wysiwyg.setSelectionMode(true);
     this.wysiwyg.setResizeMode(true);
 */
-    this.toolbar.setDevice(Device.desktop);
+    try {
+      const device = parseInt(window.sessionStorage.getItem("rsz-device"), 10);
+      if(device) this.toolbar.setDevice(device);
+      else this.toolbar.setDevice(Device.desktop);
+    } catch(e) {
+      this.toolbar.setDevice(Device.desktop);
+    }
  }
 
 
