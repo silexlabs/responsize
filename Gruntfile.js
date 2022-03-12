@@ -2,7 +2,6 @@ const sass = require('node-sass');
 
 module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-bower-task');
 
   // js
   grunt.loadNpmTasks('grunt-closure-tools');
@@ -15,7 +14,7 @@ module.exports = function(grunt) {
 
   // tasks
   grunt.registerTask('default', ['build']);
-  grunt.registerTask('build', ['bower', 'jade', 'sass', 'closureCompiler', 'append-sourcemapping']);
+  grunt.registerTask('build', ['jade', 'sass', 'closureCompiler', 'append-sourcemapping']);
 
   grunt.registerTask('append-sourcemapping', 'append sourcemap to debug.html', function() {
     var content = grunt.file.read('dist/responsize.js');
@@ -58,14 +57,6 @@ module.exports = function(grunt) {
       all: {
         src: 'src/**/*.js',
         dest: 'dist/responsize.js'
-      }
-    },
-    bower: {
-      all: {
-        options: {
-          targetDir: 'dist/lib',
-          copy: true
-        }
       }
     },
     watch: {
